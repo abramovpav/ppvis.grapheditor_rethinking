@@ -32,6 +32,7 @@ public class VertexComponent extends JComponent implements VertexComponentInterf
 	private int editMode = 0;
 	private final String ID;
 	
+	
 	public VertexComponent(String ID, int x, int y, DesktopInterface desktop)
 	{
 		System.out.println("VertexComponent(): id = \"" + ID + "\", x = " + x + ", y = " + y + ", desktop(" + desktop.getID() + ")");
