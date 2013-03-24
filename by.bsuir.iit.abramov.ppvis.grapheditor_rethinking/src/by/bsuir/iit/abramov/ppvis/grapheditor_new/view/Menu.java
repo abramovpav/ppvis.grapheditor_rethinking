@@ -15,6 +15,7 @@ public class Menu extends JMenuBar {
 	private Map<String, JMenuItem> mnItems;
 	public Menu() {
 		super();
+		System.out.println("Menu()");
 		initialize();
 	}
 	private void initialize()

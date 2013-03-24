@@ -5,41 +5,18 @@ import java.util.Iterator;
 import java.util.List;
 
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.DaddyInterface;
-import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.GraphObserverInterface;
 
 
 public class Model implements ModelInterface {	
-	private Graph graph;
-	private List<GraphObserverInterface> observers;
+	private List<Graph> graphs;
 	private List<DaddyInterface> daddies;
 	
 	public Model() {  
 		super();
-		graph = new Graph(0);
-		observers = new ArrayList<GraphObserverInterface>();
+		graphs = new ArrayList<Graph>();
 		daddies = new ArrayList<DaddyInterface>();
 	}
 
-	@Override
-	public void registerObserver(GraphObserverInterface observer) {
-		observers.add(observer);
-		
-	}
-
-	@Override
-	public void removeObserver(GraphObserverInterface observer) {
-		observers.remove(observer);
-		
-	}
-
-	@Override
-	public void notifyObservers() {
-		Iterator<GraphObserverInterface> iterator = observers.iterator();
-		while(iterator.hasNext()) {
-			iterator.next().modelUpdate();
-		}
-		
-	}
 
 	@Override
 	public void registerObserver(DaddyInterface daddy) {
@@ -59,6 +36,14 @@ public class Model implements ModelInterface {
 		while(iterator.hasNext()) {
 			iterator.next().modelUpdate();
 		}
+		
+	}
+
+	@Override
+	public Graph newGraph(int ID) {
+		Graph graph = new Graph(ID);
+		graphs.add(graph);
+		return graph;
 		
 	}
 }

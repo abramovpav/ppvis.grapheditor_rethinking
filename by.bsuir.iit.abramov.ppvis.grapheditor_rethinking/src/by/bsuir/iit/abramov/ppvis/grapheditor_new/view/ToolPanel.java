@@ -14,6 +14,7 @@ public class ToolPanel extends JPanel {
 	JPanel parent;
 	public ToolPanel(JPanel parent) {
 		super();
+		System.out.println("ToolPanel()");
 		this.parent = parent;
 		initialize();
 		createComponents();

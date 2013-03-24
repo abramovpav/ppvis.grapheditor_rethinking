@@ -4,7 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Vertex {
+public class Vertex implements VertexInterface{
 	private List observers;
 	private Point coordinates;
 	private final String ID;

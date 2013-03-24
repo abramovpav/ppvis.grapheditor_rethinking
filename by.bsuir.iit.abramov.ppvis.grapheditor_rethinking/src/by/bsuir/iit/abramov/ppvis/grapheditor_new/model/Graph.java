@@ -2,53 +2,55 @@ package by.bsuir.iit.abramov.ppvis.grapheditor_new.model;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
+import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.DesktopObserverInterface;
 
 public class Graph implements GraphInterface {
 	private final int ID;
-	private List<String> vertexIDs;
-	private List<Vertex> vertices;
+	private Map<String, Vertex> vertices;
 	private List<Edge> edges;
-	
+	private List<DesktopObserverInterface> observers;
+	private int maxIntID = 99999999;
+
 	public Graph(int ID) {
 		super();
 		this.ID = ID;
 		initialize();
 	}
-	
+
 	private void initialize() {
-		this.vertexIDs = new ArrayList<String>();
-		this.vertices = new ArrayList<Vertex>();
+		this.observers = new ArrayList<DesktopObserverInterface>();
+		this.vertices = new HashMap<String, Vertex>();
 		this.edges = new ArrayList<Edge>();
 	}
-	
-	public int getID()
-	{
+
+	public int getID() {
 		return this.ID;
 	}
-	
+
 	public boolean checkID(String id) {
-		return isContained(id);
+		return vertices.containsKey(id);
 	}
-	
-	private boolean isContained(String id) {
-		Iterator<String> iterator = this.vertexIDs.iterator();
-		while(iterator.hasNext()) {
-			if (id == iterator.next())
-				return true;			
-		}
-		return false;
-	}
-	
+
 	@Override
-	public boolean addVertex(String ID, Point coordinates) {
-		if (checkID(ID))
-			return false;
-		this.vertexIDs.add(ID);
-		this.vertices.add(new Vertex(ID, coordinates));
-		return true;
+	public String addVertex(Point coordinates) {
+		String ID = generateVertexID();
+		Vertex vertex = new Vertex(ID, coordinates);
+		this.vertices.put(ID, vertex);
+		return ID;
+	}
+	
+	private String generateVertexID() {
+		Random random = new Random();
+		int num = random.nextInt(this.maxIntID);
+		while (this.vertices.containsKey(Integer.toString(num = random.nextInt(this.maxIntID)))) {
+		}
+		return Integer.toString(num);
 	}
 
 	@Override
@@ -56,18 +58,13 @@ public class Graph implements GraphInterface {
 		if (!checkID(firstID) || !checkID(secondID))
 			return false;
 		this.edges.add(new Edge(firstID, secondID));
-		return true;		
+		return true;
 	}
 
 	@Override
 	public void deleteVertex(String ID) {
-		int index = 0;
-		index = findVertex(ID);
-		if (index != -1)
-			this.vertices.remove(index);
-		index = findID(ID);
-		if (index != -1)
-			this.vertexIDs.remove(index);
+		if (this.vertices.containsKey(ID))
+			this.vertices.remove(ID);
 	}
 
 	@Override
@@ -77,7 +74,7 @@ public class Graph implements GraphInterface {
 
 	@Override
 	public void deleteEdge(Vertex beginVertex, Vertex endVertex) {
-		deleteEdge(beginVertex.getID(), endVertex.getID());		
+		deleteEdge(beginVertex.getID(), endVertex.getID());
 	}
 
 	@Override
@@ -88,43 +85,52 @@ public class Graph implements GraphInterface {
 		if (index != -1)
 			edges.remove(index);
 	}
-	
-	private int findVertex(String ID) {
-		for (int i = 0; i < this.vertices.size(); ++i)
-			if (ID == this.vertices.get(i).getID())
-				return i;
-		return -1;
-	}
-	
+
 	private int findEdge(String firstID, String secondID) {
 		for (int i = 0; i < this.edges.size(); ++i)
 			if (isCorrectEdge(firstID, secondID, i))
 				return i;
 		return -1;
 	}
-	
-	private boolean isCorrectEdge(String firstID, String secondID, int index)
-	{
+
+	private boolean isCorrectEdge(String firstID, String secondID, int index) {
 		String first = this.edges.get(index).getFirstID();
 		String second = this.edges.get(index).getSecondID();
-		if ((firstID == first && secondID == second) || (firstID == second && secondID == first))
+		if ((firstID == first && secondID == second)
+				|| (firstID == second && secondID == first))
 			return true;
 		return false;
 	}
-	
-	private int findID(String ID) {
-		for (int i = 0; i < this.vertices.size(); ++i)
-			if (ID == this.vertexIDs.get(i))
-				return i;
-		return -1;
-	}
+
 	@Override
-	public List<Vertex> getVertices() {
+	public Map<String, Vertex> getVertices() {
 		return this.vertices;
 	}
-	
+
 	@Override
 	public List<Edge> getEdges() {
 		return this.edges;
+	}
+
+	@Override
+	public void registerObserver(DesktopObserverInterface observer) {
+		observers.add(observer);
+		observer.setGraph(this);
+
+	}
+
+	@Override
+	public void removeObserver(DesktopObserverInterface observer) {
+		observers.remove(observer);
+
+	}
+
+	@Override
+	public void notifyObservers() {
+		Iterator<DesktopObserverInterface> iterator = observers.iterator();
+		while (iterator.hasNext()) {
+			iterator.next().update();
+		}
+
 	}
 }

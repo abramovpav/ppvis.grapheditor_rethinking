@@ -20,6 +20,11 @@ import by.bsuir.iit.abramov.ppvis.grapheditor_new.model.ModelInterface;
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.model.Vertex;
 
 public class Window extends JFrame {
+	private static final int defaultX = 300;
+	private static final int defaultY = 100;
+	private static final int defaultWidth = 800;
+	private static final int defaultHeight = 600;
+	
 	private ContentPane contentPane;
 	private JPanel panel;
 
@@ -27,8 +32,9 @@ public class Window extends JFrame {
 	 * Create the frame.
 	 */
 	public Window() {
+		System.out.println("Window()");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(300, 100, 800, 600);
+		setBounds(Window.defaultX, Window.defaultY, Window.defaultWidth, Window.defaultHeight);
 		this.setExtendedState(MAXIMIZED_BOTH);
 		contentPane = new ContentPane();
 		setContentPane(contentPane);
