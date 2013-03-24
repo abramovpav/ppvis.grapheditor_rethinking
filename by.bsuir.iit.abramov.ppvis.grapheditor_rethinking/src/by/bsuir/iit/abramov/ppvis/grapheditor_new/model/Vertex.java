@@ -4,9 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import by.bsuir.iit.abramov.ppvis.grapheditor_new.view.VertexObserver;
-
-public class Vertex implements ObservableVertex {
+public class Vertex {
 	private List observers;
 	private Point coordinates;
 	private final String ID;
@@ -53,22 +51,6 @@ public class Vertex implements ObservableVertex {
 	
 	public void setSelection(boolean selected) {
 		this.selected = selected;
-	}
-
-	@Override
-	public void registerObserver(VertexObserver observer) {
-		observers.add(observer);
-	}
-
-	@Override
-	public void removeObserver(VertexObserver observer) {
-		observers.remove(observer);
-	}
-
-	@Override
-	public void notifyObservers() {
-		// TODO Auto-generated method stub 
-		
 	}
 	
 }

@@ -5,13 +5,7 @@ import java.awt.Graphics2D;
 
 import javax.swing.JComponent;
 
-public class VertexComponent extends JComponent implements VertexObserver {
-
-	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-		
-	}
+public class VertexComponent extends JComponent {
 	
 	@Override
 	public void paintComponent(Graphics g2d) {

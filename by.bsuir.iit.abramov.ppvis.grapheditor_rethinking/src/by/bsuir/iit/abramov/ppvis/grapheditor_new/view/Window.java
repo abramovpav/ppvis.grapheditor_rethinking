@@ -3,6 +3,8 @@ package by.bsuir.iit.abramov.ppvis.grapheditor_new.view;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -12,12 +14,13 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 
+import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.DaddyInterface;
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.model.Edge;
+import by.bsuir.iit.abramov.ppvis.grapheditor_new.model.ModelInterface;
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.model.Vertex;
 
-public class Window extends JFrame implements GraphObserver{
-
-	private JPanel contentPane;
+public class Window extends JFrame {
+	private ContentPane contentPane;
 	private JPanel panel;
 
 	/**
@@ -29,15 +32,11 @@ public class Window extends JFrame implements GraphObserver{
 		this.setExtendedState(MAXIMIZED_BOTH);
 		contentPane = new ContentPane();
 		setContentPane(contentPane);
-		
 		Menu menu = new Menu();
 		setJMenuBar(menu);
-		
-		
 	}
 
-	@Override
-	public void update(List<Vertex> vertices, List<Edge> lines) {
-		
+	public void registerObserver(DaddyInterface daddy) {
+		contentPane.registerObserver(daddy);
 	}
 }

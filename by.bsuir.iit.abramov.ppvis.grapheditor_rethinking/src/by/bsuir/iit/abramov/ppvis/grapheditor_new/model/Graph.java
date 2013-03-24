@@ -5,32 +5,28 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import by.bsuir.iit.abramov.ppvis.grapheditor_new.view.GraphObserver;
 
-public class Graph implements GraphInterface, ObservableGraph {
-	private List observers;
-	private final String ID;
+public class Graph implements GraphInterface {
+	private final int ID;
 	private List<String> vertexIDs;
 	private List<Vertex> vertices;
 	private List<Edge> edges;
 	
-	public Graph(String ID) {
+	public Graph(int ID) {
 		super();
 		this.ID = ID;
 		initialize();
 	}
 	
-	public Graph(int ID) {
-		super();
-		this.ID = Integer.toString(ID);
-		initialize();
-	}
-	
 	private void initialize() {
-		this.observers = new ArrayList();
 		this.vertexIDs = new ArrayList<String>();
 		this.vertices = new ArrayList<Vertex>();
 		this.edges = new ArrayList<Edge>();
+	}
+	
+	public int getID()
+	{
+		return this.ID;
 	}
 	
 	public boolean checkID(String id) {
@@ -38,9 +34,9 @@ public class Graph implements GraphInterface, ObservableGraph {
 	}
 	
 	private boolean isContained(String id) {
-		Iterator iterator = this.vertexIDs.iterator();
+		Iterator<String> iterator = this.vertexIDs.iterator();
 		while(iterator.hasNext()) {
-			if (id == (String)iterator.next())
+			if (id == iterator.next())
 				return true;			
 		}
 		return false;
@@ -130,24 +126,5 @@ public class Graph implements GraphInterface, ObservableGraph {
 	@Override
 	public List<Edge> getEdges() {
 		return this.edges;
-	}
-	
-	@Override
-	public void registerObserver(GraphObserver observer) {
-		this.observers.add(observer);
-	}
-
-	@Override
-	public void removeObserver(GraphObserver observer) {
-		this.observers.remove(observer);
-	}
-
-	@Override
-	public void notifyObservers() {
-		Iterator iterator = observers.iterator();
-		while(iterator.hasNext()) {
-			GraphObserver observer = (GraphObserver)iterator.next();
-			observer.update(this.vertices, this.edges);
-		}
 	}
 }
