@@ -7,42 +7,48 @@ import by.bsuir.iit.abramov.ppvis.grapheditor_new.model.ModelInterface;
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.view.DesktopInterface;
 
 public class BigDaddy implements DaddyInterface {
-	private ModelInterface model;
-	private List<DesktopObserverInterface> graphs;
+	private ModelInterface							model;
+	private final List<DesktopObserverInterface>	graphs;
 
 	public BigDaddy() {
+
 		graphs = new ArrayList<DesktopObserverInterface>();
 	}
 
 	@Override
-	public void modelUpdate() {
-		// TODO Auto-generated method stub
+	public void doAlgorithm(final int index) {
 
-	}
-
-	@Override
-	public void windowUpdate() {
-		// TODO Auto-generated method stub
+		model.doAlgorithm(index);
 
 	}
 
 	@Override
 	public ModelInterface getModel() {
-		return this.model;
+
+		return model;
 	}
 
 	@Override
-	public void setModel(ModelInterface model) {
-		this.model = model;
+	public void modelUpdate() {
+
+		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void newTab(DesktopInterface desktop) {
-		DesktopObserverInterface desktopObserver = new DesktopObserver();
+	public void newTab(final DesktopInterface desktop) {
+
+		final DesktopObserverInterface desktopObserver = new DesktopObserver();
 		(model.newGraph(desktop.getID())).registerObserver(desktopObserver);
 		desktop.registerObserver(desktopObserver);
 		graphs.add(desktopObserver);
+	}
+
+	@Override
+	public void setModel(final ModelInterface model) {
+
+		this.model = model;
+
 	}
 
 }

@@ -6,44 +6,59 @@ import java.util.List;
 
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.DaddyInterface;
 
+public class Model implements ModelInterface {
+	private final List<Graph>			graphs;
+	private final List<DaddyInterface>	daddies;
 
-public class Model implements ModelInterface {	
-	private List<Graph> graphs;
-	private List<DaddyInterface> daddies;
-	
-	public Model() {  
+	public Model() {
+
 		super();
 		graphs = new ArrayList<Graph>();
 		daddies = new ArrayList<DaddyInterface>();
 	}
 
+	@Override
+	public void doAlgorithm(final int index) {
+
+		final Iterator<Graph> iterator = graphs.iterator();
+		while (iterator.hasNext()) {
+			final Graph graph = iterator.next();
+			if (graph.getID() == index) {
+				graph.doAlgorithm();
+			}
+		}
+	}
 
 	@Override
-	public void registerObserver(DaddyInterface daddy) {
+	public Graph newGraph(final int ID) {
+
+		final Graph graph = new Graph(ID);
+		graphs.add(graph);
+		return graph;
+
+	}
+
+	@Override
+	public void notifyDaddy() {
+
+		final Iterator<DaddyInterface> iterator = daddies.iterator();
+		while (iterator.hasNext()) {
+			iterator.next().modelUpdate();
+		}
+
+	}
+
+	@Override
+	public void registerObserver(final DaddyInterface daddy) {
+
 		daddies.add(daddy);
 		daddy.setModel(this);
 	}
 
 	@Override
-	public void removeObserver(DaddyInterface daddy) {
+	public void removeObserver(final DaddyInterface daddy) {
+
 		daddies.remove(daddy);
-		
-	}
 
-	@Override
-	public void notifyDaddy() {
-		Iterator<DaddyInterface> iterator = daddies.iterator();
-		while(iterator.hasNext()) {
-			iterator.next().modelUpdate();
-		}
-		
-	}
-
-	@Override
-	public Graph newGraph(int ID) {
-		Graph graph = new Graph(ID);
-		graphs.add(graph);
-		return graph;
-		
 	}
 }

@@ -6,46 +6,73 @@ import java.awt.event.MouseMotionListener;
 
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.view.DesktopInterface;
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.view.VertexComponent;
-import by.bsuir.iit.abramov.ppvis.grapheditor_new.view.VertexComponentInterface;
 
 public class DesktopListener implements MouseListener, MouseMotionListener {
 
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		DesktopInterface desktop = (DesktopInterface)e.getSource();
+	private boolean isDoubleClick(final MouseEvent e) {
+
+		return e.getClickCount() == 2;
+	}
+
+	private boolean isLeftButtonPressed(final MouseEvent e) {
+
+		return e.getButton() == MouseEvent.BUTTON1;
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent e) {
-		DesktopInterface desktop = (DesktopInterface)e.getSource();
+	public void mouseClicked(final MouseEvent e) {
+
+		final DesktopInterface desktop = (DesktopInterface) e.getSource();
+		if (isDoubleClick(e)) {
+			if (isLeftButtonPressed(e)) {
+				System.out.println("mouseClicked - doubleClick(leftButton): desktop - "
+						+ desktop.getID());
+				desktop.notifyObserversNewVertex(e.getX(), e.getY());
+			}
+		}
+
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		DesktopInterface desktop = (DesktopInterface)e.getSource();
-		System.out.println("mouseClicked: desktop - " + desktop.getID());
-		desktop.notifyObserversNewVertex(e.getX(), e.getY());//addNode(e.getX(), e.getY());
-		
+	public void mouseDragged(final MouseEvent e) {
+
+		final DesktopInterface desktop = (DesktopInterface) e.getSource();
+
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
-		DesktopInterface desktop = (DesktopInterface)e.getSource();
+	public void mouseEntered(final MouseEvent e) {
+
+		final DesktopInterface desktop = (DesktopInterface) e.getSource();
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
-		DesktopInterface desktop = (DesktopInterface)e.getSource();
+	public void mouseExited(final MouseEvent e) {
+
+		final DesktopInterface desktop = (DesktopInterface) e.getSource();
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-		DesktopInterface desktop = (DesktopInterface)e.getSource();
+	public void mouseMoved(final MouseEvent e) {
+
+		final DesktopInterface desktop = (DesktopInterface) e.getSource();
+		if (desktop.isPaintEdge()) {
+			desktop.setTempVertexPaintEdge(
+					e.getX() - VertexComponent.getBoundsSize() / 2, e.getY()
+							- VertexComponent.getBoundsSize() / 2);
+		}
 	}
 
 	@Override
-	public void mouseExited(MouseEvent e) {
-		DesktopInterface desktop = (DesktopInterface)e.getSource();
+	public void mousePressed(final MouseEvent e) {
+
+		final DesktopInterface desktop = (DesktopInterface) e.getSource();
+	}
+
+	@Override
+	public void mouseReleased(final MouseEvent e) {
+
+		final DesktopInterface desktop = (DesktopInterface) e.getSource();
 	}
 
 }

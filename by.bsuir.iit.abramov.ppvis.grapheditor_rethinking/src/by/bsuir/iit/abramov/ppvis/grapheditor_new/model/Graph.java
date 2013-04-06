@@ -11,126 +11,159 @@ import java.util.Random;
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.DesktopObserverInterface;
 
 public class Graph implements GraphInterface {
-	private final int ID;
-	private Map<String, Vertex> vertices;
-	private List<Edge> edges;
-	private List<DesktopObserverInterface> observers;
-	private int maxIntID = 99999999;
+	private final int						ID;
+	private Map<String, Vertex>				vertices;
+	private List<Edge>						edges;
+	private List<DesktopObserverInterface>	observers;
+	private final int						maxIntID	= 99999999;
 
-	public Graph(int ID) {
+	public Graph(final int ID) {
+
 		super();
 		this.ID = ID;
 		initialize();
 	}
 
-	private void initialize() {
-		this.observers = new ArrayList<DesktopObserverInterface>();
-		this.vertices = new HashMap<String, Vertex>();
-		this.edges = new ArrayList<Edge>();
+	@Override
+	public boolean addEdge(final String firstID, final String secondID) {
+
+		if (!checkID(firstID) || !checkID(secondID)) {
+			return false;
+		}
+		edges.add(new Edge(firstID, secondID));
+		return true;
 	}
 
-	public int getID() {
-		return this.ID;
+	@Override
+	public VertexInterface addVertex(final Point coordinates) {
+
+		final String ID = generateVertexID();
+		final Vertex vertex = new Vertex(ID, coordinates);
+		vertices.put(ID, vertex);
+		return vertex;
 	}
 
-	public boolean checkID(String id) {
+	public boolean checkID(final String id) {
+
 		return vertices.containsKey(id);
 	}
 
 	@Override
-	public String addVertex(Point coordinates) {
-		String ID = generateVertexID();
-		Vertex vertex = new Vertex(ID, coordinates);
-		this.vertices.put(ID, vertex);
-		return ID;
+	public void deleteEdge(final String firstID, final String secondID) {
+
+		if (!checkID(firstID) || !checkID(secondID)) {
+			return;
+		}
+		final int index = findEdge(firstID, secondID);
+		if (index != -1) {
+			edges.remove(index);
+		}
 	}
-	
+
+	@Override
+	public void deleteEdge(final Vertex beginVertex, final Vertex endVertex) {
+
+		deleteEdge(beginVertex.getID(), endVertex.getID());
+	}
+
+	@Override
+	public void deleteVertex(final String ID) {
+
+		if (vertices.containsKey(ID)) {
+			vertices.remove(ID);
+		}
+	}
+
+	@Override
+	public void deleteVertex(final Vertex vertex) {
+
+		deleteVertex(vertex.getID());
+	}
+
+	@Override
+	public void doAlgorithm() {
+
+		// TODO Auto-generated method stub
+
+	}
+
+	private int findEdge(final String firstID, final String secondID) {
+
+		for (int i = 0; i < edges.size(); ++i) {
+			if (isCorrectEdge(firstID, secondID, i)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	private String generateVertexID() {
-		Random random = new Random();
-		int num = random.nextInt(this.maxIntID);
-		while (this.vertices.containsKey(Integer.toString(num = random.nextInt(this.maxIntID)))) {
+
+		final Random random = new Random();
+		int num = random.nextInt(maxIntID);
+		while (vertices.containsKey(Integer.toString(num = random.nextInt(maxIntID)))) {
 		}
 		return Integer.toString(num);
 	}
 
 	@Override
-	public boolean addEdge(String firstID, String secondID) {
-		if (!checkID(firstID) || !checkID(secondID))
-			return false;
-		this.edges.add(new Edge(firstID, secondID));
-		return true;
+	public List<Edge> getEdges() {
+
+		return edges;
 	}
 
-	@Override
-	public void deleteVertex(String ID) {
-		if (this.vertices.containsKey(ID))
-			this.vertices.remove(ID);
-	}
+	public int getID() {
 
-	@Override
-	public void deleteVertex(Vertex vertex) {
-		deleteVertex(vertex.getID());
-	}
-
-	@Override
-	public void deleteEdge(Vertex beginVertex, Vertex endVertex) {
-		deleteEdge(beginVertex.getID(), endVertex.getID());
-	}
-
-	@Override
-	public void deleteEdge(String firstID, String secondID) {
-		if (!checkID(firstID) || !checkID(secondID))
-			return;
-		int index = findEdge(firstID, secondID);
-		if (index != -1)
-			edges.remove(index);
-	}
-
-	private int findEdge(String firstID, String secondID) {
-		for (int i = 0; i < this.edges.size(); ++i)
-			if (isCorrectEdge(firstID, secondID, i))
-				return i;
-		return -1;
-	}
-
-	private boolean isCorrectEdge(String firstID, String secondID, int index) {
-		String first = this.edges.get(index).getFirstID();
-		String second = this.edges.get(index).getSecondID();
-		if ((firstID == first && secondID == second)
-				|| (firstID == second && secondID == first))
-			return true;
-		return false;
+		return ID;
 	}
 
 	@Override
 	public Map<String, Vertex> getVertices() {
-		return this.vertices;
+
+		return vertices;
+	}
+
+	private void initialize() {
+
+		observers = new ArrayList<DesktopObserverInterface>();
+		vertices = new HashMap<String, Vertex>();
+		edges = new ArrayList<Edge>();
+	}
+
+	private boolean isCorrectEdge(final String firstID, final String secondID,
+			final int index) {
+
+		final String first = edges.get(index).getFirstID();
+		final String second = edges.get(index).getSecondID();
+		if ((firstID == first && secondID == second)
+				|| (firstID == second && secondID == first)) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override
-	public List<Edge> getEdges() {
-		return this.edges;
+	public void notifyObservers() {
+
+		final Iterator<DesktopObserverInterface> iterator = observers.iterator();
+		while (iterator.hasNext()) {
+			iterator.next().update();
+		}
+
 	}
 
 	@Override
-	public void registerObserver(DesktopObserverInterface observer) {
+	public void registerObserver(final DesktopObserverInterface observer) {
+
 		observers.add(observer);
 		observer.setGraph(this);
 
 	}
 
 	@Override
-	public void removeObserver(DesktopObserverInterface observer) {
+	public void removeObserver(final DesktopObserverInterface observer) {
+
 		observers.remove(observer);
-
-	}
-
-	@Override
-	public void notifyObservers() {
-		Iterator<DesktopObserverInterface> iterator = observers.iterator();
-		while (iterator.hasNext()) {
-			iterator.next().update();
-		}
 
 	}
 }

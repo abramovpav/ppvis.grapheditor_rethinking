@@ -3,206 +3,369 @@ package by.bsuir.iit.abramov.ppvis.grapheditor_new.view;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.List;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.JComponent;
 
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.VertexListener;
+import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.VertexObserverInterface;
 
 public class VertexComponent extends JComponent implements VertexComponentInterface {
-	private static int size = 20;
-	private static int halfSize = size / 2;
-	private static int n = 2;
-	private static int d = 3;
-	private Color color = Color.BLACK;
-	public static final Color RED = Color.RED;
-	public static final Color DEFAULT_COLOR = Color.BLACK;
-	public static final Color SELECT_COLOR = Color.GREEN;
-	public static final Color ACTIVE_COLOR = Color.ORANGE;
-	public static final Color WHITE = Color.WHITE;
-	//private List<
-	private List<EdgeComponentInterface> lines;
-	private int mouseX = 0;
-	private int mouseY = 0;
-	private Boolean selected = false;
-	private DesktopInterface desktop;
-	private int editMode = 0;
-	private final String ID;
-	
-	
-	public VertexComponent(String ID, int x, int y, DesktopInterface desktop)
-	{
-		System.out.println("VertexComponent(): id = \"" + ID + "\", x = " + x + ", y = " + y + ", desktop(" + desktop.getID() + ")");
-		setBounds(x - halfSize , y - halfSize, size, size);
+	private final List<EdgeComponentInterface>	edgeObservers;
+	public static final int						DEFAULT_SIZE	= 30;
+	private static int							size			= VertexComponent.DEFAULT_SIZE;
+	private static int							halfSize		= VertexComponent.size / 2;
+	private static int							n				= 2;
+	private static int							d				= 3;
+
+	public static int getBoundsSize() {
+
+		return VertexComponent.size;
+	}
+
+	private static void setSize(final int size) {
+
+		VertexComponent.size = size;
+		VertexComponent.halfSize = size / 2;
+	}
+
+	private final String						key				= "vertex";
+
+	private Color								color			= Color.BLACK;
+	public static final Color					RED				= Color.RED;
+	public static final Color					DEFAULT_COLOR	= Color.BLACK;
+	public static final Color					SELECT_COLOR	= Color.GREEN;
+	public static final Color					ACTIVE_COLOR	= Color.ORANGE;
+	public static final Color					WHITE			= Color.WHITE;
+	private int									mouseX			= 0;
+	private int									mouseY			= 0;
+	private Boolean								selected		= false;
+	private final List<VertexObserverInterface>	observers;
+	private final DesktopInterface				desktop;
+	private final List<EdgeComponentInterface>	lines;
+	private final String						ID;
+
+	public VertexComponent(final String ID, final int x, final int y,
+			final DesktopInterface desktop) {
+
+		System.out.println("VertexComponent(): id = \"" + ID + "\", x = " + x + ", y = "
+				+ y + ", desktop(" + desktop.getID() + ")");
+		setBounds(x - VertexComponent.halfSize, y - VertexComponent.halfSize,
+				VertexComponent.size, VertexComponent.size);
 		this.ID = ID;
 		this.desktop = desktop;
 		lines = new ArrayList<EdgeComponentInterface>();
-		VertexListener listener = new VertexListener();
+		observers = new ArrayList<VertexObserverInterface>();
+		edgeObservers = new ArrayList<EdgeComponentInterface>();
+		final VertexListener listener = new VertexListener();
 		addMouseListener(listener);
 		addMouseMotionListener(listener);
 	}
-	
-	//add
-	/*
-	public void addLine(PLine line)
-	{
-		lines.add(line);
-	}*/
-	
-	//get
-	/*
-	public void deleteLine(PLine line)
-	{
-		lines.remove(line);
+
+	@Override
+	public void addEdge() {
+
+		final EdgeComponentInterface edge = new EdgeComponent(this);
+		registerEdge(edge);
+		desktop.paintEdge(edge);
+
 	}
-	
-	public void deleteLines()
-	{
-		Rectangle rec;
-		Iterator<PLine> iterator = lines.iterator();
-		while(iterator.hasNext())
-		{
-			PLine next = iterator.next();
-			rec = next.getBounds();
-			DesktopInterface.removeLine(next);
-			next.deleteOtherNode(this);
-			iterator.remove();
-			DesktopInterface.repaint(rec);
+
+	@Override
+	public boolean contains(final int x, final int y) {
+
+		return Math.sqrt(Math.pow(x - VertexComponent.halfSize, 2)
+				+ Math.pow(y - VertexComponent.halfSize, 2)) < VertexComponent.halfSize;
+	}
+
+	@Override
+	public void deleteEdge(final EdgeComponentInterface edge) {
+
+		if (edgeObservers.contains(edge)) {
+			edgeObservers.remove(edge);
 		}
-	}*/
-	
+
+	}
+
 	@Override
-	public String getID() {
-		return this.ID;
+	public void deleteEdges() {
+
+		final Iterator<EdgeComponentInterface> iterator = edgeObservers.iterator();
+		while (iterator.hasNext()) {
+			final EdgeComponentInterface edge = iterator.next();
+			edge.getOtherVertex(this).deleteEdge(edge);
+			desktop.deleteEdge(edge);
+			iterator.remove();
+		}
+
 	}
-	
-	
-	public static int getBoundsSize()
-	{
-		return size;
-	}
-	
+
+	// set
+
 	@Override
-	public int getMouseX()
-	{
-		return mouseX;
+	public boolean existPaintEdge() {
+
+		return desktop.isPaintEdge();
 	}
-	
+
 	@Override
-	public int getMouseY()
-	{
-		return mouseY;
+	public void finishPaintEdge() {
+
+		desktop.finishPaintEdge(this);
+
 	}
-	
-	public int getEditMode()
-	{
-		return editMode;
-	}
-	
+
 	@Override
 	public Point getCoordinates() {
+
 		return new Point(getX(), getY());
-	}
-	
-	//set
-	
-	@Override
-	public void select()
-	{
-		System.out.println("VertexComponent(" + desktop.getID() + ", " + ID  + ") - select()");
-		selected = true;
-		setColor(SELECT_COLOR);
-		desktop.setComponentZOrder(this, Desktop.TOP_LAYER);
-		desktop.addSelectedVertex(this);
-		repaint();
-	}
-	
-	public void selectRed() 
-	{
-		System.out.println("VertexComponent(" + desktop.getID() + ", " + ID  + ") - selectRed()");
-		selected = true;
-		setColor(RED);
-		desktop.setComponentZOrder(this, Desktop.TOP_LAYER);
-		repaint();
-	}
-	
-	@Override
-	public void unselect()
-	{
-		System.out.println("VertexComponent(" + desktop.getID() + ", " + ID  + ") - unselect():");
-		selected = false;
-		setColor(DEFAULT_COLOR);
-		repaint();
-	 }
-	
-	private void setColor(Color color)
-	{
-		this.color = color;
-	}
-	
-	public void setProportion(int arg0, int arg1)
-	{
-		n = arg0;
-		d = arg1;
-	}
-	@Override
-	public void setMouseX(int mouseX)
-	{
-		this.mouseX = mouseX;
-	}
-	@Override
-	public void setMouseY(int mouseY)
-	{
-		this.mouseY = mouseY;
-	}
-	
-	private static void setSize(int size) {
-		VertexComponent.size = size;
-		VertexComponent.halfSize = size / 2; 
-	}
-	
-	//other
-	
-	@Override
-	public boolean isSelected()
-	{
-		return selected;
-	}
-	
-	@Override
-	public void paintComponent(Graphics gr)
-	{
-		System.out.println("VertexComponent(" + desktop.getID() + ", " + ID  + ") - paintComponent()");
-		int diam = getWidth();
-		int r2 = diam / 2;
-		int r1 = (n * r2)/d;
-		Graphics2D g2d = (Graphics2D)gr;
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2d.setColor(color);
-		g2d.fillOval(0, 0, diam, diam);
-		g2d.setColor(WHITE);
-		g2d.fillOval((getWidth() - 2 * r1) / 2 , (getHeight() - 2 * r1) / 2, r1 * 2, r1 * 2);
-	}
-	/*
-	public void linesUpdateBounds()
-	{
-		for (PLine line : lines)
-		{
-			line.updateBounds();
-		}
-	}*/
-	
-	@Override
-	public boolean contains(int x, int y) {
-		return Math.sqrt(Math.pow(x - halfSize, 2) + Math.pow(y - halfSize, 2)) < halfSize;	 
 	}
 
 	@Override
 	public int getDesktopID() {
+
 		return desktop.getID();
 	}
 
+	@Override
+	public int getEditMode() {
+
+		return desktop.getEditMode();
+	}
+
+	@Override
+	public String getID() {
+
+		return ID;
+	}
+
+	@Override
+	public int getMouseX() {
+
+		return mouseX;
+	}
+
+	@Override
+	public int getMouseY() {
+
+		return mouseY;
+	}
+
+	@Override
+	public boolean isSelected() {
+
+		return selected;
+	}
+
+	// other
+
+	@Override
+	public void lightSelect() {
+
+		System.out.println("VertexComponent(" + desktop.getID() + ", " + ID
+				+ ") - lightSelect()");
+		setColor(VertexComponent.ACTIVE_COLOR);
+		repaint();
+	}
+
+	@Override
+	public void moveSelectedVertices(final int x, final int y) {
+
+		desktop.moveSelectedVertices(x, y);
+
+	}
+
+	@Override
+	public void moveVertex(final int x, final int y) {
+
+		System.out.println("VertexComponent(" + desktop.getID() + ", " + ID
+				+ ") - moveVertex(" + x + ", " + y + ")");
+		setLocation(getX() + x, getY() + y);
+		notifyObserversNewLocation(x, y);
+	}
+
+	@Override
+	public void notifyObservers() {
+
+		final Iterator<VertexObserverInterface> iterator = observers.iterator();
+		while (iterator.hasNext()) {
+			iterator.next().update();
+		}
+
+	}
+
+	@Override
+	public void notifyObserversNewLocation(final int x, final int y) {
+
+		final Iterator<VertexObserverInterface> iterator = observers.iterator();
+		while (iterator.hasNext()) {
+			iterator.next().newLocation(x, y);
+		}
+		final Iterator<EdgeComponentInterface> iter = edgeObservers.iterator();
+		while (iter.hasNext()) {
+			iter.next().update();
+		}
+
+	}
+
+	@Override
+	public void paintComponent(final Graphics gr) {
+
+		System.out.println("VertexComponent(" + desktop.getID() + ", " + ID
+				+ ") - paintComponent()");
+		final int diam = getWidth();
+		final int r2 = diam / 2;
+		final int r1 = (VertexComponent.n * r2) / VertexComponent.d;
+		final Graphics2D g2d = (Graphics2D) gr;
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
+		g2d.setColor(color);
+		g2d.fillOval(0, 0, diam, diam);
+		g2d.setColor(VertexComponent.WHITE);
+		g2d.fillOval((getWidth() - 2 * r1) / 2, (getHeight() - 2 * r1) / 2, r1 * 2,
+				r1 * 2);
+	}
+
+	@Override
+	public void registerEdge(final EdgeComponentInterface edge) {
+
+		edgeObservers.add(edge);
+	}
+
+	@Override
+	public void registerObserver(final VertexObserverInterface observer) {
+
+		observers.add(observer);
+		observer.setVertex(this);
+
+	}
+
+	@Override
+	public void removeEdge(final EdgeComponentInterface edge) {
+
+		edgeObservers.remove(edge);
+
+	}
+
+	@Override
+	public void removeObserver(final VertexObserverInterface observer) {
+
+		observers.remove(observer);
+
+	}
+
+	@Override
+	public void removeObservers() {
+
+		final Iterator<VertexObserverInterface> iterator = observers.iterator();
+		while (iterator.hasNext()) {
+			iterator.next().delVertexComponent();
+			iterator.remove();
+		}
+
+	}
+
+	@Override
+	public void select() {
+
+		System.out.println("VertexComponent(" + desktop.getID() + ", " + ID
+				+ ") - select()");
+		selected = true;
+		setColor(VertexComponent.SELECT_COLOR);
+		desktop.setComponentZOrder(this, Desktop.TOP_LAYER);
+		desktop.addSelectedVertex(this);
+		repaint();
+	}
+
+	@Override
+	public void selectRed() {
+
+		System.out.println("VertexComponent(" + desktop.getID() + ", " + ID
+				+ ") - selectRed()");
+		selected = true;
+		setColor(VertexComponent.RED);
+		desktop.setComponentZOrder(this, Desktop.TOP_LAYER);
+		desktop.addSelectedVertex(this);
+		repaint();
+	}
+
+	private void setColor(final Color color) {
+
+		this.color = color;
+	}
+
+	@Override
+	public void setMouseX(final int mouseX) {
+
+		this.mouseX = mouseX;
+	}
+
+	@Override
+	public void setMouseY(final int mouseY) {
+
+		this.mouseY = mouseY;
+	}
+
+	public void setProportion(final int arg0, final int arg1) {
+
+		VertexComponent.n = arg0;
+		VertexComponent.d = arg1;
+	}
+
+	@Override
+	public void setTempVertexPaintEdge(final int x, final int y) {
+
+		desktop.setTempVertexPaintEdge(x, y);
+
+	}
+
+	@Override
+	public void unselect() {
+
+		unselectFoundation();
+		desktop.unselectVertex(this);
+		repaint();
+	}
+
+	@Override
+	public void unselectAll() {
+
+		desktop.unselectAll();
+
+	}
+
+	private void unselectFoundation() {
+
+		System.out.println("VertexComponent(" + desktop.getID() + ", " + ID
+				+ ") - unselect():");
+		selected = false;
+		setColor(VertexComponent.DEFAULT_COLOR);
+	}
+
+	@Override
+	public void unselectSpecial() {
+
+		unselectFoundation();
+		repaint();
+	}
+
+	@Override
+	public void updateEdges() {
+
+		final Iterator<EdgeComponentInterface> iterator = edgeObservers.iterator();
+		while (iterator.hasNext()) {
+			iterator.next().update();
+		}
+
+	}
+
+	@Override
+	public final DesktopInterface getDesktop() {
+
+		return desktop;
+	}
 }

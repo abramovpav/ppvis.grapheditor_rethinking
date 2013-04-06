@@ -1,48 +1,87 @@
 package by.bsuir.iit.abramov.ppvis.grapheditor_new.view;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
+import java.awt.Frame;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
 
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.DaddyInterface;
-import by.bsuir.iit.abramov.ppvis.grapheditor_new.model.Edge;
-import by.bsuir.iit.abramov.ppvis.grapheditor_new.model.ModelInterface;
-import by.bsuir.iit.abramov.ppvis.grapheditor_new.model.Vertex;
 
-public class Window extends JFrame {
-	private static final int defaultX = 300;
-	private static final int defaultY = 100;
-	private static final int defaultWidth = 800;
-	private static final int defaultHeight = 600;
-	
-	private ContentPane contentPane;
-	private JPanel panel;
+public class Window extends JFrame implements KeyListener {
+	public static final int		defaultX		= 300;
+	public static final int		defaultY		= 100;
+	public static final int		defaultWidth	= 800;
+	public static final int		defaultHeight	= 600;
+	public static final String	TITLE			= "GraphEditor";
+
+	private final ContentPane	contentPane;
 
 	/**
 	 * Create the frame.
 	 */
 	public Window() {
+
 		System.out.println("Window()");
+		setTitle(Window.TITLE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(Window.defaultX, Window.defaultY, Window.defaultWidth, Window.defaultHeight);
-		this.setExtendedState(MAXIMIZED_BOTH);
+		setBounds(Window.defaultX, Window.defaultY, Window.defaultWidth,
+				Window.defaultHeight);
+		setExtendedState(Frame.MAXIMIZED_BOTH);
 		contentPane = new ContentPane();
 		setContentPane(contentPane);
-		Menu menu = new Menu();
+		final Menu menu = new Menu(this);
 		setJMenuBar(menu);
+		addKeyListener(this);
 	}
 
-	public void registerObserver(DaddyInterface daddy) {
+	private void deleteSelectedItems() {
+
+		contentPane.deleteSelectedItems();
+	}
+
+	public void doAlgorithm() {
+
+		contentPane.doAlgorithm();
+	}
+
+	@Override
+	public void keyPressed(final KeyEvent e) {
+
+		// 27 - escape
+		// 127 - delete
+
+		System.out.println("Window: keyPressed(" + e.getKeyCode() + ")");
+		if (e.getKeyCode() == 27) // Key "Escape"
+		{
+			unselectAll();
+		}
+		if (e.getKeyCode() == 127) // Key "Delete"
+		{
+			deleteSelectedItems();
+		}
+	}
+
+	@Override
+	public void keyReleased(final KeyEvent e) {
+
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void keyTyped(final KeyEvent e) {
+
+	}
+
+	public void registerObserver(final DaddyInterface daddy) {
+
 		contentPane.registerObserver(daddy);
 	}
+
+	private void unselectAll() {
+
+		contentPane.unselectAll();
+	}
+
 }

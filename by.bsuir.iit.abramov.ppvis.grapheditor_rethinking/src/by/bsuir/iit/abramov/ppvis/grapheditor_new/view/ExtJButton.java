@@ -4,13 +4,24 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class ExtJButton extends JButton {
-	private JPanel container;
-	public ExtJButton(String caption, JPanel container) {
+	private final JPanel	container;
+	private final String	caption;
+
+	public ExtJButton(final String caption, final JPanel container) {
+
 		super(caption);
 		this.container = container;
+		this.caption = caption;
+		setFocusable(false);
 	}
-	
+
+	public String getCaption() {
+
+		return caption;
+	}
+
 	public JPanel getContainer() {
-		return this.container;
+
+		return container;
 	}
 }
