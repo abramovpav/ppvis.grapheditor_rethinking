@@ -21,12 +21,7 @@ public class Graph implements GraphInterface, Serializable {
 	private List<Edge>						edges;
 	private transient List<DesktopObserver>	observers;
 	private final int						maxIntID			= 99999;
-	
-	public void devastation() {
-		vertices.clear();
-		edges.clear();
-		observers.clear();
-	}
+	private static final int				maxPath				= 99999999;
 
 	public Graph(final int ID) {
 
@@ -36,12 +31,12 @@ public class Graph implements GraphInterface, Serializable {
 	}
 
 	@Override
-	public boolean addEdge(final String firstID, final String secondID) {
+	public boolean addEdge(final int weight, final String firstID, final String secondID) {
 
 		if (!checkID(firstID) || !checkID(secondID)) {
 			return false;
 		}
-		edges.add(new Edge(firstID, secondID));
+		edges.add(new Edge(weight, firstID, secondID));
 		return true;
 	}
 
@@ -104,9 +99,23 @@ public class Graph implements GraphInterface, Serializable {
 	}
 
 	@Override
+	public void devastation() {
+
+		vertices.clear();
+		edges.clear();
+		observers.clear();
+	}
+
+	@Override
 	public void doAlgorithm() {
 
-		// TODO Auto-generated method stub
+		final Map<String, Integer> mapIndexes = new HashMap<String, Integer>();
+		int i = 0;
+		for (final String id : vertices.keySet()) {
+			mapIndexes.put(id, i);
+			i++;
+		}
+		generateMatrix(mapIndexes);
 
 	}
 
@@ -118,6 +127,42 @@ public class Graph implements GraphInterface, Serializable {
 			}
 		}
 		return -1;
+	}
+
+	private int findEdgeOneID(final String ID) {
+
+		for (int i = 0; i < edges.size(); ++i) {
+			final Edge edge = edges.get(i);
+			if (edge.getFirstID() == ID || edge.getSecondID() == ID) {
+				return i;
+			}
+		}
+
+		return -1;
+	}
+
+	private int[][] generateMatrix(final Map<String, Integer> indexes) {
+
+		final int[][] matrix = new int[indexes.size()][indexes.size()];
+		for (int i = 0; i < indexes.size(); ++i) {
+			for (int j = 0; j < indexes.size(); ++j) {
+				if (i == j) {
+					matrix[i][j] = Graph.maxPath;
+				}
+			}
+		}
+		final Iterator<Edge> iterator = edges.iterator();
+		while (iterator.hasNext()) {
+			final Edge edge = iterator.next();
+			if (indexes.containsKey(edge.getFirstID())
+					&& indexes.containsKey(edge.getSecondID())) {
+				matrix[indexes.get(edge.getFirstID())][indexes.get(edge.getSecondID())] = edge
+						.getWeight();
+				matrix[indexes.get(edge.getSecondID())][indexes.get(edge.getFirstID())] = edge
+						.getWeight();
+			}
+		}
+		return matrix;
 	}
 
 	private String generateVertexID() {
@@ -166,12 +211,11 @@ public class Graph implements GraphInterface, Serializable {
 	}
 
 	@Override
-	public void notifyObservers() {
+	public void newWeight(final String firstID, final String secondID, final int weight) {
 
-		final Iterator<DesktopObserver> iterator = observers.iterator();
-		while (iterator.hasNext()) {
-			iterator.next().update();
-		}
+		final int index = findEdge(firstID, secondID);
+		final Edge edge = edges.get(index);
+		edge.setWeight(weight);
 
 	}
 
@@ -187,6 +231,20 @@ public class Graph implements GraphInterface, Serializable {
 	public void removeObserver(final DesktopObserver observer) {
 
 		observers.remove(observer);
+	}
 
+	@Override
+	public void vertexNewID(final String oldID, final String newID) {
+
+		final int index = findEdgeOneID(oldID);
+		if (index != -1) {
+			final Edge edge = edges.get(index);
+			if (edge.getFirstID() == oldID) {
+				edge.setFirstID(newID);
+			}
+			if (edge.getSecondID() == oldID) {
+				edge.setSecondID(newID);
+			}
+		}
 	}
 }

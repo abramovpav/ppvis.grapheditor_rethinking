@@ -37,6 +37,16 @@ public class Window extends JFrame implements KeyListener {
 		addKeyListener(this);
 	}
 
+	public void changeTitle(final String title) {
+
+		contentPane.changeTitle(title);
+	}
+
+	public void closeTab() {
+
+		contentPane.closeTab();
+	}
+
 	private void deleteSelectedItems() {
 
 		contentPane.deleteSelectedItems();
@@ -99,10 +109,6 @@ public class Window extends JFrame implements KeyListener {
 
 		contentPane.openModel();
 	}
-	
-	public void closeTab() {
-		contentPane.closeTab();
-	}
 
 	public void registerObserver(final Daddy daddy) {
 
@@ -122,10 +128,6 @@ public class Window extends JFrame implements KeyListener {
 	private void unselectAll() {
 
 		contentPane.unselectAll();
-	}
-	
-	public void changeTitle(final String title) {
-		contentPane.changeTitle(title);
 	}
 
 }

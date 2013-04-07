@@ -109,7 +109,7 @@ public class Menu extends JMenuBar {
 
 		});
 
-		setActionListener("Save...", new ActionListener() {
+		setActionListener("Save as...", new ActionListener() {
 
 			@Override
 			public void actionPerformed(final ActionEvent e) {
@@ -125,6 +125,17 @@ public class Menu extends JMenuBar {
 			public void actionPerformed(final ActionEvent e) {
 
 				((Window) parent).showInf();
+			}
+
+		});
+
+		setActionListener("Exit", new ActionListener() {
+
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+
+				((Window) parent).setVisible(false);
+				((Window) parent).dispose();
 			}
 
 		});

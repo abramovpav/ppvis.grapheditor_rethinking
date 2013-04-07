@@ -18,14 +18,7 @@ public class DesktopObserver {
 
 	public void deleteEdge(final EdgeComponentInterface edge) {
 
-		graph.deleteEdge(edge.getFirstVertex().getID(), edge.getSecondVertex().getID());
-		for (final MouseListener listener : ((EdgeComponent) edge).getMouseListeners()) {
-			((EdgeComponent) edge).removeMouseListener(listener);
-		}
-		for (final MouseMotionListener listener : ((EdgeComponent) edge)
-				.getMouseMotionListeners()) {
-			((EdgeComponent) edge).removeMouseMotionListener(listener);
-		}
+		lightDeleteEdge(edge);
 		edge.deleteFromVertices();
 	}
 
@@ -46,8 +39,9 @@ public class DesktopObserver {
 		graph.deleteVertex(vertex.getID());
 
 	}
-	
+
 	public void devastation() {
+
 		graph.devastation();
 		graph = null;
 		desktop = null;
@@ -69,8 +63,8 @@ public class DesktopObserver {
 	public void loadVertex(final String ID, final int x, final int y) {
 
 		final Vertex vertex = graph.addVertex(ID, new Point(x, y));
-		final VertexComponentInterface vertexComponent = desktop.addNode(vertex.getID(),
-				x, y);
+		final VertexComponentInterface vertexComponent = desktop.addVertex(
+				vertex.getID(), x, y);
 		final VertexObserver observer = new VertexObserver();
 		vertex.registerObserver(observer);
 		vertexComponent.registerObserver(observer);
@@ -79,18 +73,25 @@ public class DesktopObserver {
 
 	public void newEdge(final EdgeComponentInterface edge) {
 
-		graph.addEdge(edge.getFirstVertex().getID(), edge.getSecondVertex().getID());
+		graph.addEdge(edge.getWeight(), edge.getFirstVertex().getID(), edge
+				.getSecondVertex().getID());
 		((EdgeComponent) edge).addMouseListener(new EdgeListener());
 	}
 
 	public void newVertex(final int x, final int y) {
 
 		final Vertex vertex = graph.addVertex(new Point(x, y));
-		final VertexComponentInterface vertexComponent = desktop.addNode(vertex.getID(),
-				x, y);
+		final VertexComponentInterface vertexComponent = desktop.addVertex(
+				vertex.getID(), x, y);
 		final VertexObserver observer = new VertexObserver();
 		vertex.registerObserver(observer);
 		vertexComponent.registerObserver(observer);
+	}
+
+	public void newWeight(final EdgeComponentInterface edge) {
+
+		graph.newWeight(edge.getFirstVertex().getID(), edge.getSecondVertex().getID(),
+				edge.getWeight());
 	}
 
 	public void setDesktop(final DesktopInterface desktop) {
@@ -105,16 +106,9 @@ public class DesktopObserver {
 
 	}
 
-	public void update() {
+	public void vertexNewID(final String oldID, final String newID) {
 
-		// TODO Auto-generated method stub
-
-	}
-
-	public void update(final VertexComponentInterface vertex) {
-
-		// graph.addVertex(vertex.getID(), vertex.getCoordinates());
-
+		graph.vertexNewID(oldID, newID);
 	}
 
 }

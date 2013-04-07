@@ -3,7 +3,6 @@ package by.bsuir.iit.abramov.ppvis.grapheditor_new.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import by.bsuir.iit.abramov.ppvis.grapheditor_new.model.Graph;
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.model.Model;
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.view.DesktopInterface;
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.view.Window;
@@ -11,15 +10,17 @@ import by.bsuir.iit.abramov.ppvis.grapheditor_new.view.Window;
 public class Daddy {
 	private Model						model;
 	private final List<DesktopObserver>	graphs;
-	private Window window;
-	
-	public void removeDesktop(final int ID) {
-		model.removeGraph(ID);
-	}
+	private Window						window;
 
 	public Daddy() {
 
 		graphs = new ArrayList<DesktopObserver>();
+	}
+
+	public void changeTitle(final String title) {
+
+		window.changeTitle(title);
+
 	}
 
 	public void doAlgorithm(final int index) {
@@ -33,12 +34,6 @@ public class Daddy {
 		return model;
 	}
 
-	public void changeTitle(final String title) {
-
-		window.changeTitle(title);
-
-	}
-
 	public void newTab(final DesktopInterface desktop) {
 
 		final DesktopObserver desktopObserver = new DesktopObserver();
@@ -46,12 +41,10 @@ public class Daddy {
 		desktop.registerObserver(desktopObserver);
 		graphs.add(desktopObserver);
 	}
-	
 
-	public void newTab(final DesktopInterface desktop, final Graph graph) {
+	public void removeDesktop(final int ID) {
 
-		// TODO Auto-generated method stub
-
+		model.removeGraph(ID);
 	}
 
 	public void saveModel(final int index) {
@@ -65,8 +58,9 @@ public class Daddy {
 		this.model = model;
 
 	}
-	
-	public void setWindow(Window window){
+
+	public void setWindow(final Window window) {
+
 		this.window = window;
 	}
 

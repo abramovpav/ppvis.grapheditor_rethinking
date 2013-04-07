@@ -97,14 +97,6 @@ public class ContentPane extends JPanel {
 		daddies = new ArrayList<Daddy>();
 	}
 
-	public void loadTab(final DesktopInterface desktop, final Graph graph) {
-
-		final Iterator<Daddy> iterator = daddies.iterator();
-		while (iterator.hasNext()) {
-			iterator.next().newTab(desktop, graph);
-		}
-	}
-
 	public void newTab(final DesktopInterface desktop) {
 
 		final Iterator<Daddy> iterator = daddies.iterator();

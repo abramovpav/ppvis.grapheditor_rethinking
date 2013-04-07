@@ -13,7 +13,6 @@ public class Start {
 
 	public static void main(final String[] args) {
 
-
 		final Daddy daddy = new Daddy();
 
 		final Model model = new Model();

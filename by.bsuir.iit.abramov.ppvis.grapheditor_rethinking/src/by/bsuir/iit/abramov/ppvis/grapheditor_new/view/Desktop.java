@@ -46,20 +46,6 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 	}
 
 	@Override
-	public VertexComponentInterface addNode(final String ID, final int x, final int y) {
-
-		saved = false;
-		System.out.println("Desktop(" + getID() + ") - addNode()");
-		final VertexComponentInterface vertex = new VertexComponent(ID, x, y, this);
-		vertices.add(vertex);
-
-		add((VertexComponent) vertex);
-		setLayer((VertexComponent) vertex, Desktop.NODE_LAYER);
-		notifyObservers(vertex);
-		return vertex;
-	}
-
-	@Override
 	public void addSelectedEdge(final EdgeComponentInterface edge) {
 
 		saved = false;
@@ -73,6 +59,19 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 		saved = false;
 		System.out.println("Desktop(" + getID() + ") - addSelectedVertex()");
 		selectedVertices.add(vertex);
+	}
+
+	@Override
+	public VertexComponentInterface addVertex(final String ID, final int x, final int y) {
+
+		saved = false;
+		System.out.println("Desktop(" + getID() + ") - addNode()");
+		final VertexComponentInterface vertex = new VertexComponent(ID, x, y, this);
+		vertices.add(vertex);
+
+		add((VertexComponent) vertex);
+		setLayer((VertexComponent) vertex, Desktop.NODE_LAYER);
+		return vertex;
 	}
 
 	@Override
@@ -141,7 +140,8 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 		final Iterator<VertexComponentInterface> iterator = vertices.iterator();
 		while (iterator.hasNext()) {
 			final VertexComponentInterface vertex = iterator.next();
-			if (vertex.getID() == ID) {
+			final String id = vertex.getID();
+			if (id.equalsIgnoreCase(ID)) {
 				return vertex;
 			}
 		}
@@ -310,23 +310,20 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 		}
 	}
 
-	@Override
-	public void notifyObservers() {
+	private void newWeight(final EdgeComponentInterface edge) {
 
 		final Iterator<DesktopObserver> iterator = observers.iterator();
 		while (iterator.hasNext()) {
-			iterator.next().update();
+			iterator.next().newWeight(edge);
 		}
 	}
 
-	@Override
-	public void notifyObservers(final VertexComponentInterface vertex) {
+	private void notifyNewID(final String oldID, final String newID) {
 
 		final Iterator<DesktopObserver> iterator = observers.iterator();
 		while (iterator.hasNext()) {
-			iterator.next().update(vertex);
+			iterator.next().vertexNewID(oldID, newID);
 		}
-
 	}
 
 	@Override
@@ -393,20 +390,30 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 	public void openDialogNewID() {
 
 		if (isOneSelectedVertex() || isOneSelectedEdge()) {
-			final DialogNewID dialog = new DialogNewID(this);
-			dialog.setModal(true);
-			dialog.setVisible(true);
-			if (dialog.isOK()) {
-				if (isOneSelectedVertex()) {
-					final VertexComponentInterface vertex = selectedVertices.get(0);
+
+			if (isOneSelectedVertex()) {
+				final VertexComponentInterface vertex = selectedVertices.get(0);
+				final DialogNewID dialog = new DialogNewID(this, 0, vertex.getID());
+				dialog.setModal(true);
+				dialog.setVisible(true);
+				if (dialog.isOK()) {
 					saved = false;
+					notifyNewID(vertex.getID(), dialog.getText());
 					vertex.setID(dialog.getText());
+
 				}
-				if (isOneSelectedEdge()) {
-					final EdgeComponentInterface edge = selectedEdges.get(0);
+			}
+			if (isOneSelectedEdge()) {
+				final EdgeComponentInterface edge = selectedEdges.get(0);
+				final DialogNewID dialog = new DialogNewID(this, 1, Integer.toString(edge
+						.getWeight()));
+				dialog.setModal(true);
+				dialog.setVisible(true);
+				if (dialog.isOK()) {
 					int res = 0;
 					if ((res = isDigit(dialog.getText())) != -1) {
 						edge.setWeight(res);
+						newWeight(edge);
 						saved = false;
 						System.out.println("res = " + res);
 					}
@@ -512,6 +519,8 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 			final VertexComponentInterface vertex2 = findVertexByID(edge.getSecondID());
 			if (vertex1 != null && vertex2 != null) {
 				final EdgeComponentInterface newEdge = new EdgeComponent(vertex1);
+
+				newEdge.setWeight(edge.getWeight());
 				vertex1.registerEdge(newEdge);
 				vertex2.registerEdge(newEdge);
 				newEdge.setSecondVertex(vertex2);

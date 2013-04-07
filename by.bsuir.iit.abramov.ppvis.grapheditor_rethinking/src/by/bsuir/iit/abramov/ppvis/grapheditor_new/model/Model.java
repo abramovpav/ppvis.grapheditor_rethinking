@@ -58,11 +58,11 @@ public class Model {
 	}
 
 	public void removeGraph(final int ID) {
-		Iterator<Graph> iterator = graphs.iterator();
-		while(iterator.hasNext()) {
-			Graph graph = iterator.next(); 
-			if (graph.getID() == ID)
-			{
+
+		final Iterator<Graph> iterator = graphs.iterator();
+		while (iterator.hasNext()) {
+			final Graph graph = iterator.next();
+			if (graph.getID() == ID) {
 				graph.devastation();
 				iterator.remove();
 			}

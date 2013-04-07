@@ -7,13 +7,15 @@ import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.DesktopObserver;
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.model.Graph;
 
 public interface DesktopInterface {
-	public VertexComponentInterface addNode(String ID, int x, int y);
-
 	public void addSelectedEdge(EdgeComponentInterface edge);
 
 	public void addSelectedVertex(VertexComponentInterface vertex);
 
+	public VertexComponentInterface addVertex(String ID, int x, int y);
+
 	public void cancelPaintEdge();
+
+	public void clean();
 
 	public void deleteEdge(EdgeComponentInterface edge);
 
@@ -25,13 +27,13 @@ public interface DesktopInterface {
 
 	public int getID();
 
+	public List<VertexComponentInterface> getVertices();
+
 	public boolean isPaintEdge();
 
+	public boolean isSaved();
+
 	public void moveSelectedVertices(int x, int y);
-
-	public void notifyObservers();
-
-	public void notifyObservers(VertexComponentInterface vertex);
 
 	public void notifyObserversDeleteEdge(EdgeComponentInterface edge);
 
@@ -48,20 +50,16 @@ public interface DesktopInterface {
 	public void openDialogNewID();
 
 	public void paintEdge(EdgeComponentInterface edge);
-	
-	public void save();
-	public List<VertexComponentInterface> getVertices();
-	
-	public void removeVertex(final VertexComponentInterface vertex);
-	
-	public void clean();
-	public void removeObservers();
-	
-	public boolean isSaved();
 
 	public void registerObserver(DesktopObserver observer);
 
 	public void removeObserver(DesktopObserver observer);
+
+	public void removeObservers();
+
+	public void removeVertex(final VertexComponentInterface vertex);
+
+	public void save();
 
 	public void setComponentZOrder(Component comp, int index);
 

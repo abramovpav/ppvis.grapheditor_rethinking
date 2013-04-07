@@ -7,7 +7,7 @@ import java.util.Map;
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.DesktopObserver;
 
 public interface GraphInterface {
-	public boolean addEdge(String beginID, String endID);
+	public boolean addEdge(int weight, String beginID, String endID);
 
 	public Vertex addVertex(Point coordinates);
 
@@ -18,10 +18,10 @@ public interface GraphInterface {
 	public void deleteEdge(Vertex beginVertex, Vertex endVertex);
 
 	public void deleteVertex(String ID);
-	
-	public void devastation();
 
 	public void deleteVertex(Vertex vertex);
+
+	public void devastation();
 
 	public void doAlgorithm();
 
@@ -29,9 +29,11 @@ public interface GraphInterface {
 
 	public Map<String, Vertex> getVertices();
 
-	public void notifyObservers();
+	public void newWeight(String firstID, String secondID, int weight);
 
 	public void registerObserver(DesktopObserver observer);
 
 	public void removeObserver(DesktopObserver observer);
+
+	public void vertexNewID(String oldID, String newID);
 }
