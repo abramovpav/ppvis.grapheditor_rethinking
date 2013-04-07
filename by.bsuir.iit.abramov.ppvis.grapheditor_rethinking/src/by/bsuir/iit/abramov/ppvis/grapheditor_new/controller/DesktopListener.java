@@ -19,6 +19,11 @@ public class DesktopListener implements MouseListener, MouseMotionListener {
 		return e.getButton() == MouseEvent.BUTTON1;
 	}
 
+	private boolean isRightButtonPressed(final MouseEvent e) {
+
+		return e.getButton() == MouseEvent.BUTTON3;
+	}
+
 	@Override
 	public void mouseClicked(final MouseEvent e) {
 
@@ -28,6 +33,11 @@ public class DesktopListener implements MouseListener, MouseMotionListener {
 				System.out.println("mouseClicked - doubleClick(leftButton): desktop - "
 						+ desktop.getID());
 				desktop.notifyObserversNewVertex(e.getX(), e.getY());
+			}
+		}
+		if (isRightButtonPressed(e)) {
+			if (desktop.isPaintEdge()) {
+				desktop.cancelPaintEdge();
 			}
 		}
 
@@ -67,6 +77,11 @@ public class DesktopListener implements MouseListener, MouseMotionListener {
 	public void mousePressed(final MouseEvent e) {
 
 		final DesktopInterface desktop = (DesktopInterface) e.getSource();
+		if (isRightButtonPressed(e)) {
+			if (desktop.isPaintEdge()) {
+				desktop.cancelPaintEdge();
+			}
+		}
 	}
 
 	@Override

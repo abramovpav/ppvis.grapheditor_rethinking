@@ -5,7 +5,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.view.EdgeComponentInterface;
-import by.bsuir.iit.abramov.ppvis.grapheditor_new.view.VertexComponentInterface;
 
 public class EdgeListener implements MouseListener, MouseMotionListener {
 
@@ -18,8 +17,7 @@ public class EdgeListener implements MouseListener, MouseMotionListener {
 	public void mouseClicked(final MouseEvent e) {
 
 		if (isLeftButtonPressed(e)) {
-			final EdgeComponentInterface edge = (EdgeComponentInterface) e
-					.getSource();
+			final EdgeComponentInterface edge = (EdgeComponentInterface) e.getSource();
 			System.out.println("mouseClicked: VertexComponentInterface()");
 			if (!e.isControlDown()) {
 				edge.unselectAll();

@@ -29,6 +29,13 @@ public class TabbedPane extends JTabbedPane {
 		setFocusable(false);
 	}
 
+	public void openDialogNewID() {
+
+		final DesktopInterface desktop = ((ExtJScrollPane) getSelectedComponent())
+				.getDesktop();
+		desktop.openDialogNewID();
+	}
+
 	public void setEditMode(final int mode) {
 
 		final DesktopInterface desktop = ((ExtJScrollPane) getSelectedComponent())

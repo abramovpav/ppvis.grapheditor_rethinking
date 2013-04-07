@@ -24,6 +24,7 @@ public class EdgeComponent extends JComponent implements EdgeComponentInterface 
 																	.getBoundsSize() / 4;
 	private int								stroke			= EdgeComponent.DEFAULT_STROKE;
 	private boolean							selected		= false;
+	private int								weight			= 0;
 
 	public EdgeComponent(final VertexComponentInterface begVertex) {
 
@@ -63,11 +64,14 @@ public class EdgeComponent extends JComponent implements EdgeComponentInterface 
 	@Override
 	public void deleteFromVertices() {
 
-		begVertex.removeEdge(this);
-		endVertex.removeEdge(this);
+		if (begVertex != null) {
+			begVertex.removeEdge(this);
+		}
+		if (endVertex != null) {
+			endVertex.removeEdge(this);
+		}
 
 	}
-
 
 	@Override
 	public VertexComponentInterface getFirstVertex() {
@@ -90,6 +94,12 @@ public class EdgeComponent extends JComponent implements EdgeComponentInterface 
 	public VertexComponentInterface getSecondVertex() {
 
 		return endVertex;
+	}
+
+	@Override
+	public final int getWeight() {
+
+		return weight;
 	}
 
 	private boolean isFirstVertex(final String key) {
@@ -115,13 +125,6 @@ public class EdgeComponent extends JComponent implements EdgeComponentInterface 
 				+ endVertex.getID() + ") - lightSelect()");
 		setColor(EdgeComponent.ACTIVE_COLOR);
 		repaint();
-	}
-
-	@Override
-	public void notifyObservers() {
-
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -154,17 +157,15 @@ public class EdgeComponent extends JComponent implements EdgeComponentInterface 
 	}
 
 	@Override
-	public void registerObserver() {
+	public void select() {
 
-		// TODO Auto-generated method stub
+		System.out.println("VertexComponent() - select()");
+		selected = true;
+		setColor(EdgeComponent.SELECT_COLOR);
+		// desktop.setComponentZOrder(this, Desktop.TOP_LAYER);
 
-	}
-
-	@Override
-	public void removeObserver() {
-
-		// TODO Auto-generated method stub
-
+		begVertex.getDesktop().addSelectedEdge(this);
+		repaint();
 	}
 
 	private void setColor(final Color color) {
@@ -196,7 +197,14 @@ public class EdgeComponent extends JComponent implements EdgeComponentInterface 
 		this.stroke = stroke;
 
 	}
-	
+
+	@Override
+	public void setWeight(final int weight) {
+
+		this.weight = weight;
+
+	}
+
 	@Override
 	public void unselect() {
 
@@ -204,7 +212,6 @@ public class EdgeComponent extends JComponent implements EdgeComponentInterface 
 		begVertex.getDesktop().unselectEdge(this);
 		repaint();
 	}
-
 
 	@Override
 	public void unselectAll() {
@@ -247,18 +254,6 @@ public class EdgeComponent extends JComponent implements EdgeComponentInterface 
 		setBounds(Math.min(begX, endX), Math.min(begY, endY),
 				Math.max(begX, endX) - Math.min(begX, endX) + k, Math.max(begY, endY)
 						- Math.min(begY, endY) + k);
-	}
-	
-	@Override
-	public void select() {
-
-		System.out.println("VertexComponent() - select()");
-		selected = true;
-		setColor(EdgeComponent.SELECT_COLOR);
-		//desktop.setComponentZOrder(this, Desktop.TOP_LAYER);
-		
-		begVertex.getDesktop().addSelectedEdge(this);
-		repaint();
 	}
 
 }

@@ -2,7 +2,7 @@ package by.bsuir.iit.abramov.ppvis.grapheditor_new.view;
 
 import java.awt.Point;
 
-import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.VertexObserverInterface;
+import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.VertexObserver;
 
 public interface VertexComponentInterface {
 	public void addEdge();
@@ -16,6 +16,8 @@ public interface VertexComponentInterface {
 	public void finishPaintEdge();
 
 	public Point getCoordinates();
+
+	public DesktopInterface getDesktop();
 
 	public int getDesktopID();
 
@@ -39,17 +41,17 @@ public interface VertexComponentInterface {
 
 	public void moveVertex(int x, int y);
 
-	public void notifyObservers();
+	public void notifyNewID();
 
 	public void notifyObserversNewLocation(int x, int y);
 
 	public void registerEdge(EdgeComponentInterface edge);
 
-	public void registerObserver(VertexObserverInterface observer);
+	public void registerObserver(VertexObserver observer);
 
 	public void removeEdge(EdgeComponentInterface edge);
 
-	public void removeObserver(VertexObserverInterface observer);
+	public void removeObserver(VertexObserver observer);
 
 	public void removeObservers();
 
@@ -57,11 +59,11 @@ public interface VertexComponentInterface {
 
 	public void selectRed();
 
+	public void setID(String ID);
+
 	public void setLocation(int x, int y);
 
 	public void setMouseX(int mouseX);
-	
-	public DesktopInterface getDesktop();
 
 	public void setMouseY(int mouseY);
 

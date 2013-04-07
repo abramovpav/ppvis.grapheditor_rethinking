@@ -12,11 +12,11 @@ import java.util.List;
 import javax.swing.JComponent;
 
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.VertexListener;
-import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.VertexObserverInterface;
+import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.VertexObserver;
 
 public class VertexComponent extends JComponent implements VertexComponentInterface {
 	private final List<EdgeComponentInterface>	edgeObservers;
-	public static final int						DEFAULT_SIZE	= 30;
+	public static final int						DEFAULT_SIZE	= 80;
 	private static int							size			= VertexComponent.DEFAULT_SIZE;
 	private static int							halfSize		= VertexComponent.size / 2;
 	private static int							n				= 2;
@@ -41,13 +41,14 @@ public class VertexComponent extends JComponent implements VertexComponentInterf
 	public static final Color					SELECT_COLOR	= Color.GREEN;
 	public static final Color					ACTIVE_COLOR	= Color.ORANGE;
 	public static final Color					WHITE			= Color.WHITE;
+	public static final Color					TEXT_COLOR		= Color.BLUE;
 	private int									mouseX			= 0;
 	private int									mouseY			= 0;
 	private Boolean								selected		= false;
-	private final List<VertexObserverInterface>	observers;
+	private final List<VertexObserver>			observers;
 	private final DesktopInterface				desktop;
 	private final List<EdgeComponentInterface>	lines;
-	private final String						ID;
+	private String								ID;
 
 	public VertexComponent(final String ID, final int x, final int y,
 			final DesktopInterface desktop) {
@@ -55,11 +56,11 @@ public class VertexComponent extends JComponent implements VertexComponentInterf
 		System.out.println("VertexComponent(): id = \"" + ID + "\", x = " + x + ", y = "
 				+ y + ", desktop(" + desktop.getID() + ")");
 		setBounds(x - VertexComponent.halfSize, y - VertexComponent.halfSize,
-				VertexComponent.size, VertexComponent.size);
-		this.ID = ID;
+				VertexComponent.size * 2, VertexComponent.size + 3);
+		this.ID = checkID(ID);
 		this.desktop = desktop;
 		lines = new ArrayList<EdgeComponentInterface>();
-		observers = new ArrayList<VertexObserverInterface>();
+		observers = new ArrayList<VertexObserver>();
 		edgeObservers = new ArrayList<EdgeComponentInterface>();
 		final VertexListener listener = new VertexListener();
 		addMouseListener(listener);
@@ -73,6 +74,15 @@ public class VertexComponent extends JComponent implements VertexComponentInterf
 		registerEdge(edge);
 		desktop.paintEdge(edge);
 
+	}
+
+	private final String checkID(final String ID) {
+
+		int endIndex = 5;
+		if (ID.length() < endIndex) {
+			endIndex = ID.length();
+		}
+		return ID.substring(0, endIndex);
 	}
 
 	@Override
@@ -126,6 +136,12 @@ public class VertexComponent extends JComponent implements VertexComponentInterf
 	}
 
 	@Override
+	public final DesktopInterface getDesktop() {
+
+		return desktop;
+	}
+
+	@Override
 	public int getDesktopID() {
 
 		return desktop.getID();
@@ -155,13 +171,13 @@ public class VertexComponent extends JComponent implements VertexComponentInterf
 		return mouseY;
 	}
 
+	// other
+
 	@Override
 	public boolean isSelected() {
 
 		return selected;
 	}
-
-	// other
 
 	@Override
 	public void lightSelect() {
@@ -185,15 +201,15 @@ public class VertexComponent extends JComponent implements VertexComponentInterf
 		System.out.println("VertexComponent(" + desktop.getID() + ", " + ID
 				+ ") - moveVertex(" + x + ", " + y + ")");
 		setLocation(getX() + x, getY() + y);
-		notifyObserversNewLocation(x, y);
+		notifyObserversNewLocation(getX() + x, getY() + y);
 	}
 
 	@Override
-	public void notifyObservers() {
+	public void notifyNewID() {
 
-		final Iterator<VertexObserverInterface> iterator = observers.iterator();
+		final Iterator<VertexObserver> iterator = observers.iterator();
 		while (iterator.hasNext()) {
-			iterator.next().update();
+			iterator.next().update(ID);
 		}
 
 	}
@@ -201,7 +217,7 @@ public class VertexComponent extends JComponent implements VertexComponentInterf
 	@Override
 	public void notifyObserversNewLocation(final int x, final int y) {
 
-		final Iterator<VertexObserverInterface> iterator = observers.iterator();
+		final Iterator<VertexObserver> iterator = observers.iterator();
 		while (iterator.hasNext()) {
 			iterator.next().newLocation(x, y);
 		}
@@ -217,7 +233,7 @@ public class VertexComponent extends JComponent implements VertexComponentInterf
 
 		System.out.println("VertexComponent(" + desktop.getID() + ", " + ID
 				+ ") - paintComponent()");
-		final int diam = getWidth();
+		final int diam = VertexComponent.size;
 		final int r2 = diam / 2;
 		final int r1 = (VertexComponent.n * r2) / VertexComponent.d;
 		final Graphics2D g2d = (Graphics2D) gr;
@@ -226,8 +242,11 @@ public class VertexComponent extends JComponent implements VertexComponentInterf
 		g2d.setColor(color);
 		g2d.fillOval(0, 0, diam, diam);
 		g2d.setColor(VertexComponent.WHITE);
-		g2d.fillOval((getWidth() - 2 * r1) / 2, (getHeight() - 2 * r1) / 2, r1 * 2,
-				r1 * 2);
+		g2d.fillOval((VertexComponent.size - 2 * r1) / 2,
+				(VertexComponent.size - 2 * r1) / 2, r1 * 2, r1 * 2);
+		final char[] text = ID.toCharArray();
+		g2d.setColor(VertexComponent.TEXT_COLOR);
+		g2d.drawChars(text, 0, text.length, VertexComponent.size, VertexComponent.size);
 	}
 
 	@Override
@@ -237,7 +256,7 @@ public class VertexComponent extends JComponent implements VertexComponentInterf
 	}
 
 	@Override
-	public void registerObserver(final VertexObserverInterface observer) {
+	public void registerObserver(final VertexObserver observer) {
 
 		observers.add(observer);
 		observer.setVertex(this);
@@ -252,7 +271,7 @@ public class VertexComponent extends JComponent implements VertexComponentInterf
 	}
 
 	@Override
-	public void removeObserver(final VertexObserverInterface observer) {
+	public void removeObserver(final VertexObserver observer) {
 
 		observers.remove(observer);
 
@@ -261,7 +280,7 @@ public class VertexComponent extends JComponent implements VertexComponentInterf
 	@Override
 	public void removeObservers() {
 
-		final Iterator<VertexObserverInterface> iterator = observers.iterator();
+		final Iterator<VertexObserver> iterator = observers.iterator();
 		while (iterator.hasNext()) {
 			iterator.next().delVertexComponent();
 			iterator.remove();
@@ -296,6 +315,15 @@ public class VertexComponent extends JComponent implements VertexComponentInterf
 	private void setColor(final Color color) {
 
 		this.color = color;
+	}
+
+	@Override
+	public void setID(final String ID) {
+
+		this.ID = checkID(ID);
+		notifyNewID();
+		repaint();
+
 	}
 
 	@Override
@@ -361,11 +389,5 @@ public class VertexComponent extends JComponent implements VertexComponentInterf
 			iterator.next().update();
 		}
 
-	}
-
-	@Override
-	public final DesktopInterface getDesktop() {
-
-		return desktop;
 	}
 }

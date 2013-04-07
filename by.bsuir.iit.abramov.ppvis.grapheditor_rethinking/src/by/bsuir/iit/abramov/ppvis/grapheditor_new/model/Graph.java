@@ -1,6 +1,7 @@
 package by.bsuir.iit.abramov.ppvis.grapheditor_new.model;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -8,14 +9,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.DesktopObserverInterface;
+import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.DesktopObserver;
 
-public class Graph implements GraphInterface {
+public class Graph implements GraphInterface, Serializable {
+	/**
+	 * 
+	 */
+	private static final long				serialVersionUID	= 1L;
 	private final int						ID;
 	private Map<String, Vertex>				vertices;
 	private List<Edge>						edges;
-	private List<DesktopObserverInterface>	observers;
-	private final int						maxIntID	= 99999999;
+	private transient List<DesktopObserver>	observers;
+	private final int						maxIntID			= 99999;
+	
+	public void devastation() {
+		vertices.clear();
+		edges.clear();
+		observers.clear();
+	}
 
 	public Graph(final int ID) {
 
@@ -35,11 +46,23 @@ public class Graph implements GraphInterface {
 	}
 
 	@Override
-	public VertexInterface addVertex(final Point coordinates) {
+	public Vertex addVertex(final Point coordinates) {
 
 		final String ID = generateVertexID();
 		final Vertex vertex = new Vertex(ID, coordinates);
 		vertices.put(ID, vertex);
+		return vertex;
+	}
+
+	@Override
+	public Vertex addVertex(final String ID, final Point coordinates) {
+
+		String tmpID = ID;
+		if (checkID(tmpID)) {
+			tmpID = generateVertexID();
+		}
+		final Vertex vertex = new Vertex(tmpID, coordinates);
+		vertices.put(tmpID, vertex);
 		return vertex;
 	}
 
@@ -125,7 +148,7 @@ public class Graph implements GraphInterface {
 
 	private void initialize() {
 
-		observers = new ArrayList<DesktopObserverInterface>();
+		observers = new ArrayList<DesktopObserver>();
 		vertices = new HashMap<String, Vertex>();
 		edges = new ArrayList<Edge>();
 	}
@@ -145,7 +168,7 @@ public class Graph implements GraphInterface {
 	@Override
 	public void notifyObservers() {
 
-		final Iterator<DesktopObserverInterface> iterator = observers.iterator();
+		final Iterator<DesktopObserver> iterator = observers.iterator();
 		while (iterator.hasNext()) {
 			iterator.next().update();
 		}
@@ -153,7 +176,7 @@ public class Graph implements GraphInterface {
 	}
 
 	@Override
-	public void registerObserver(final DesktopObserverInterface observer) {
+	public void registerObserver(final DesktopObserver observer) {
 
 		observers.add(observer);
 		observer.setGraph(this);
@@ -161,7 +184,7 @@ public class Graph implements GraphInterface {
 	}
 
 	@Override
-	public void removeObserver(final DesktopObserverInterface observer) {
+	public void removeObserver(final DesktopObserver observer) {
 
 		observers.remove(observer);
 

@@ -1,16 +1,20 @@
 package by.bsuir.iit.abramov.ppvis.grapheditor_new.model;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.VertexObserverInterface;
+import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.VertexObserver;
 
-public class Vertex implements VertexInterface {
-	private List<VertexObserverInterface>	observers;
+public class Vertex implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long				serialVersionUID	= 1L;
+	private transient List<VertexObserver>	observers;
 	private Point							coordinates;
-	private final String					ID;
+	private String							ID;
 	private boolean							selected;
 
 	public Vertex(final String iD, final int x, final int y) {
@@ -32,16 +36,25 @@ public class Vertex implements VertexInterface {
 		return coordinates;
 	}
 
-	@Override
 	public String getID() {
 
 		return ID;
 	}
 
+	public final int getX() {
+
+		return coordinates.x;
+	}
+
+	public final int getY() {
+
+		return coordinates.y;
+	}
+
 	private void initialize() {
 
 		selected = false;
-		observers = new ArrayList<VertexObserverInterface>();
+		observers = new ArrayList<VertexObserver>();
 	}
 
 	public boolean isSelected() {
@@ -49,26 +62,14 @@ public class Vertex implements VertexInterface {
 		return selected;
 	}
 
-	@Override
-	public void notifyObservers() {
-
-		final Iterator<VertexObserverInterface> iterator = observers.iterator();
-		while (iterator.hasNext()) {
-			iterator.next().update();
-		}
-
-	}
-
-	@Override
-	public void registerObserver(final VertexObserverInterface observer) {
+	public void registerObserver(final VertexObserver observer) {
 
 		observers.add(observer);
 		observer.setVertex(this);
 
 	}
 
-	@Override
-	public void removeObserver(final VertexObserverInterface observer) {
+	public void removeObserver(final VertexObserver observer) {
 
 		observers.remove(observer);
 
@@ -84,7 +85,12 @@ public class Vertex implements VertexInterface {
 		this.coordinates = coordinates;
 	}
 
-	@Override
+	public void setID(final String ID) {
+
+		this.ID = ID;
+
+	}
+
 	public void setLocation(final int x, final int y) {
 
 		coordinates.x = x;

@@ -3,10 +3,12 @@ package by.bsuir.iit.abramov.ppvis.grapheditor_new.view;
 import java.awt.Frame;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 
-import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.DaddyInterface;
+import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.Daddy;
 
 public class Window extends JFrame implements KeyListener {
 	public static final int		defaultX		= 300;
@@ -46,42 +48,84 @@ public class Window extends JFrame implements KeyListener {
 	}
 
 	@Override
+	public final ContentPane getContentPane() {
+
+		return contentPane;
+	}
+
+	@Override
 	public void keyPressed(final KeyEvent e) {
 
 		// 27 - escape
 		// 127 - delete
 
 		System.out.println("Window: keyPressed(" + e.getKeyCode() + ")");
-		if (e.getKeyCode() == 27) // Key "Escape"
-		{
+		if (e.getKeyCode() == 27) { // Key "Escape"
 			unselectAll();
 		}
-		if (e.getKeyCode() == 127) // Key "Delete"
-		{
+		if (e.getKeyCode() == 127) { // Key "Delete"
 			deleteSelectedItems();
+		}
+		if (e.getKeyCode() == 73) { // Key "I"
+			openDialogNewID();
 		}
 	}
 
 	@Override
-	public void keyReleased(final KeyEvent e) {
-
-		// TODO Auto-generated method stub
+	public void keyReleased(final KeyEvent e) {/* Unreleased */
 
 	}
 
 	@Override
-	public void keyTyped(final KeyEvent e) {
+	public void keyTyped(final KeyEvent e) {/* Unreleased */
 
 	}
 
-	public void registerObserver(final DaddyInterface daddy) {
+	private void openDialogNewID() {
+
+		contentPane.openDialogNewID();
+	}
+
+	public void openFile() {
+
+		final JFileChooser fileChooser = new JFileChooser();
+		if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+			final File file = fileChooser.getSelectedFile();
+			System.out.println(file);
+		}
+	}
+
+	public void openModel() {
+
+		contentPane.openModel();
+	}
+	
+	public void closeTab() {
+		contentPane.closeTab();
+	}
+
+	public void registerObserver(final Daddy daddy) {
 
 		contentPane.registerObserver(daddy);
+	}
+
+	public void saveModel() {
+
+		contentPane.saveModel();
+	}
+
+	public void showInf() {
+
+		contentPane.showInf();
 	}
 
 	private void unselectAll() {
 
 		contentPane.unselectAll();
+	}
+	
+	public void changeTitle(final String title) {
+		contentPane.changeTitle(title);
 	}
 
 }

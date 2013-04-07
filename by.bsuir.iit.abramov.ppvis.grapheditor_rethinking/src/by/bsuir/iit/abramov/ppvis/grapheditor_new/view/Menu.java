@@ -10,7 +10,10 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.InstrumentsActionListener;
+import by.bsuir.iit.abramov.ppvis.grapheditor_new.util.ExtJMenuItem;
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.util.MenuContent;
+import by.bsuir.iit.abramov.ppvis.grapheditor_new.util.Support;
 
 public class Menu extends JMenuBar {
 	private Map<MenuContent, JMenu>	mnButtons;
@@ -35,10 +38,18 @@ public class Menu extends JMenuBar {
 			mnButtons.put(menu, mnButton);
 			add(mnButton);
 			for (int j = 0; j < menu.getItems().length; ++j) {
-				final JMenuItem mnItem = new JMenuItem(menu.getItems()[j]);
+				final JMenuItem mnItem = new ExtJMenuItem(menu.getItems()[j], parent);
 				mnItems.put(menu.getItems()[j], mnItem);
 				mnButton.add(mnItem);
 			}
+		}
+	}
+
+	public void setActionListener(final String name, final ActionListener listener) {
+
+		final JMenuItem mnItem = mnItems.get(name);
+		if (mnItem != null) {
+			mnItem.addActionListener(listener);
 		}
 	}
 
@@ -57,5 +68,66 @@ public class Menu extends JMenuBar {
 
 			});
 		}
+
+		final JMenuItem mnItem;
+		setActionListener("New", new ActionListener() {
+
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+
+				Support.newTab((ContentPane) parent.getContentPane());
+
+			}
+
+		});
+		/*
+		 * mnItem = mnItems.get("New"); if (mnItem != null) {
+		 * mnItem.addActionListener(); }
+		 */
+
+		setActionListener("Vertex", new InstrumentsActionListener());
+
+		setActionListener("Edge", new InstrumentsActionListener());
+
+		setActionListener("Close", new ActionListener() {
+
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+
+				((Window) parent).closeTab();
+			}
+
+		});
+
+		setActionListener("Open...", new ActionListener() {
+
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+
+				((Window) parent).openModel();
+			}
+
+		});
+
+		setActionListener("Save...", new ActionListener() {
+
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+
+				((Window) parent).saveModel();
+			}
+
+		});
+
+		setActionListener("get Information", new ActionListener() {
+
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+
+				((Window) parent).showInf();
+			}
+
+		});
+
 	}
 }

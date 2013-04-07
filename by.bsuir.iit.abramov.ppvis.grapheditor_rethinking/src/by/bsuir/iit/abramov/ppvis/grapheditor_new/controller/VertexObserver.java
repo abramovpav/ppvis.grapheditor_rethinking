@@ -1,51 +1,45 @@
 package by.bsuir.iit.abramov.ppvis.grapheditor_new.controller;
 
-import by.bsuir.iit.abramov.ppvis.grapheditor_new.model.VertexInterface;
+import by.bsuir.iit.abramov.ppvis.grapheditor_new.model.Vertex;
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.view.VertexComponentInterface;
 
-public class VertexObserver implements VertexObserverInterface {
-	private VertexInterface				vertex;
+public class VertexObserver {
+	private Vertex						vertex;
 	private VertexComponentInterface	vertexComponent;
 
-	@Override
 	public void delVertex() {
 
 		vertex = null;
 
 	}
 
-	@Override
 	public void delVertexComponent() {
 
 		vertexComponent = null;
 
 	}
 
-	@Override
 	public void newLocation(final int x, final int y) {
 
 		vertex.setLocation(x, y);
 
 	}
 
-	@Override
+	public void setVertex(final Vertex vertex) {
+
+		this.vertex = vertex;
+
+	}
+
 	public void setVertex(final VertexComponentInterface vertexComponent) {
 
 		this.vertexComponent = vertexComponent;
 
 	}
 
-	@Override
-	public void setVertex(final VertexInterface vertex) {
+	public void update(final String ID) {
 
-		this.vertex = vertex;
-
-	}
-
-	@Override
-	public void update() {
-
-		// TODO Auto-generated method stub
+		vertex.setID(ID);
 
 	}
 
