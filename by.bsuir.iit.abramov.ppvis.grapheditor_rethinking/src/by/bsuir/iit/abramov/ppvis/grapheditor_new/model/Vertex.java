@@ -16,16 +16,17 @@ public class Vertex implements Serializable {
 	private Point							coordinates;
 	private String							ID;
 	private boolean							selected;
+	private Graph graph;
 
-	public Vertex(final String iD, final int x, final int y) {
-
+	public Vertex(final Graph graph, final String iD, final int x, final int y) {
+		this.graph = graph;
 		coordinates = new Point(x, y);
 		ID = iD;
 		initialize();
 	}
 
-	public Vertex(final String iD, final Point coordinates) {
-
+	public Vertex(final Graph graph, final String iD, final Point coordinates) {
+		this.graph = graph;
 		this.coordinates = coordinates;
 		ID = iD;
 		initialize();
@@ -87,8 +88,8 @@ public class Vertex implements Serializable {
 
 	public void setID(final String ID) {
 
+		graph.newVertexID(this.ID, ID);
 		this.ID = ID;
-
 	}
 
 	public void setLocation(final int x, final int y) {

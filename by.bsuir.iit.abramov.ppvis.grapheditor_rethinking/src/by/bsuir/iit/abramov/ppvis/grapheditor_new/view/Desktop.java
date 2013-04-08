@@ -190,12 +190,12 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 
 	private int isDigit(final String text) {
 
-		int k = 0, d = 1, s = 0;
+		int k = 0, s = 0;
 
 		for (int i = 0; i < text.length(); ++i) {
 			if (Character.isDigit(text.charAt(i))) {
-				s += Character.getNumericValue(text.charAt(i)) * d;
-				d *= 10;
+				s *= 10;
+				s += Character.getNumericValue(text.charAt(i));
 				k++;
 			} else {
 				return -1;
@@ -207,6 +207,17 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 			return -1;
 		}
 	}
+	
+	/*
+	 * oldVersion
+	 * if (Character.isDigit(text.charAt(i))) {
+				s += Character.getNumericValue(text.charAt(i)) * d;
+				d *= 10;
+				k++;
+			} else {
+				return -1;
+			}
+	*/
 
 	private boolean isOneSelectedEdge() {
 
@@ -318,11 +329,11 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 		}
 	}
 
-	private void notifyNewID(final String oldID, final String newID) {
+	private void notifyNewID(final VertexComponentInterface vertex, final String newID) {
 
 		final Iterator<DesktopObserver> iterator = observers.iterator();
 		while (iterator.hasNext()) {
-			iterator.next().vertexNewID(oldID, newID);
+			iterator.next().vertexNewID(vertex, newID);
 		}
 	}
 
@@ -398,9 +409,7 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 				dialog.setVisible(true);
 				if (dialog.isOK()) {
 					saved = false;
-					notifyNewID(vertex.getID(), dialog.getText());
-					vertex.setID(dialog.getText());
-
+					notifyNewID(vertex, dialog.getText());
 				}
 			}
 			if (isOneSelectedEdge()) {
@@ -576,6 +585,15 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 			selectedVertices.remove(vertex);
 		}
 
+	}
+
+	@Override
+	public void showError(String text) {
+
+		final ErrorScreen error = new ErrorScreen("***ERROR*** " + text);
+		error.setModal(true);
+		error.setVisible(true);
+		
 	}
 
 }

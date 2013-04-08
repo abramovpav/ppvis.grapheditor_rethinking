@@ -26,10 +26,13 @@ public interface GraphInterface {
 	public void doAlgorithm();
 
 	public List<Edge> getEdges();
+	
+	public void newVertexID(String oldID, String newID);
 
 	public Map<String, Vertex> getVertices();
 
 	public void newWeight(String firstID, String secondID, int weight);
+	public boolean checkID(final String id);
 
 	public void registerObserver(DesktopObserver observer);
 

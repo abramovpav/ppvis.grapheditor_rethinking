@@ -54,19 +54,20 @@ public class ContentPane extends JPanel {
 	}
 
 	public void closeTab() {
-
-		final DesktopInterface desktop = ((ExtJScrollPane) tabbedPane
-				.getSelectedComponent()).getDesktop();
-		if (desktop.isSaved()) {
-			removeTab(desktop);
-		} else {
-			switch (saveDialog(desktop)) {
-				case 1:
-					saveModel();
-				case 0:
-					removeTab(desktop);
-				break;
-				default:
+		if (tabbedPane.getTabCount() != 0) {
+			final DesktopInterface desktop = ((ExtJScrollPane) tabbedPane
+					.getSelectedComponent()).getDesktop();
+			if (desktop.isSaved()) {
+				removeTab(desktop);
+			} else {
+				switch (saveDialog(desktop)) {
+					case 1:
+						saveModel();
+					case 0:
+						removeTab(desktop);
+					break;
+					default:
+				}
 			}
 		}
 	}
@@ -78,8 +79,8 @@ public class ContentPane extends JPanel {
 	}
 
 	public void doAlgorithm() {
-
-		notifyDaddy(tabbedPane.getSelectedIndex());
+		if (tabbedPane.getTabCount() != 0)
+			notifyDaddy(tabbedPane.getSelectedIndex());
 
 	}
 
@@ -195,24 +196,26 @@ public class ContentPane extends JPanel {
 	}
 
 	public void saveModel() {
-
-		final Iterator<Daddy> iterator = daddies.iterator();
-		while (iterator.hasNext()) {
-			iterator.next().saveModel(tabbedPane.getSelectedIndex());
+		if (tabbedPane.getTabCount() != 0) {
+			final Iterator<Daddy> iterator = daddies.iterator();
+			while (iterator.hasNext()) {
+				iterator.next().saveModel(tabbedPane.getSelectedIndex());
+			}
 		}
 	}
 
 	public void setEditMode(final int mode) {
-
-		tabbedPane.setEditMode(mode);
+		if (tabbedPane.getTabCount() != 0)
+			tabbedPane.setEditMode(mode);
 
 	}
 
 	public void showInf() {
-
-		final Iterator<Daddy> iterator = daddies.iterator();
-		while (iterator.hasNext()) {
-			iterator.next().showInf();
+		if (tabbedPane.getTabCount() != 0) {
+			final Iterator<Daddy> iterator = daddies.iterator();
+			while (iterator.hasNext()) {
+				iterator.next().showInf();
+			}
 		}
 	}
 

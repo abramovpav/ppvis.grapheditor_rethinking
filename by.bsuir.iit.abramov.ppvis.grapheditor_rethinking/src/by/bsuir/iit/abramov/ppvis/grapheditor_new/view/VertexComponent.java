@@ -16,7 +16,7 @@ import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.VertexObserver;
 
 public class VertexComponent extends JComponent implements VertexComponentInterface {
 	private final List<EdgeComponentInterface>	edgeObservers;
-	public static final int						DEFAULT_SIZE	= 80;
+	public static final int						DEFAULT_SIZE	= 30;
 	private static int							size			= VertexComponent.DEFAULT_SIZE;
 	private static int							halfSize		= VertexComponent.size / 2;
 	private static int							n				= 2;
@@ -34,7 +34,6 @@ public class VertexComponent extends JComponent implements VertexComponentInterf
 	}
 
 	private final String						key				= "vertex";
-
 	private Color								color			= Color.BLACK;
 	public static final Color					RED				= Color.RED;
 	public static final Color					DEFAULT_COLOR	= Color.BLACK;
@@ -56,7 +55,7 @@ public class VertexComponent extends JComponent implements VertexComponentInterf
 		System.out.println("VertexComponent(): id = \"" + ID + "\", x = " + x + ", y = "
 				+ y + ", desktop(" + desktop.getID() + ")");
 		setBounds(x - VertexComponent.halfSize, y - VertexComponent.halfSize,
-				VertexComponent.size * 2, VertexComponent.size + 3);
+				VertexComponent.size * 3, VertexComponent.size + 3);
 		this.ID = checkID(ID);
 		this.desktop = desktop;
 		lines = new ArrayList<EdgeComponentInterface>();
