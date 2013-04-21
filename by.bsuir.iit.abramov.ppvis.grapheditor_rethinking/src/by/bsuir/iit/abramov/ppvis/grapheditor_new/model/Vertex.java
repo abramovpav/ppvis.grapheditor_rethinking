@@ -16,9 +16,10 @@ public class Vertex implements Serializable {
 	private Point							coordinates;
 	private String							ID;
 	private boolean							selected;
-	private Graph graph;
+	private final Graph						graph;
 
 	public Vertex(final Graph graph, final String iD, final int x, final int y) {
+
 		this.graph = graph;
 		coordinates = new Point(x, y);
 		ID = iD;
@@ -26,6 +27,7 @@ public class Vertex implements Serializable {
 	}
 
 	public Vertex(final Graph graph, final String iD, final Point coordinates) {
+
 		this.graph = graph;
 		this.coordinates = coordinates;
 		ID = iD;

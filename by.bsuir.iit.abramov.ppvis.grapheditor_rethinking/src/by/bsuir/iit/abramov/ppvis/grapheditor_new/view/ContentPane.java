@@ -54,6 +54,7 @@ public class ContentPane extends JPanel {
 	}
 
 	public void closeTab() {
+
 		if (tabbedPane.getTabCount() != 0) {
 			final DesktopInterface desktop = ((ExtJScrollPane) tabbedPane
 					.getSelectedComponent()).getDesktop();
@@ -79,8 +80,10 @@ public class ContentPane extends JPanel {
 	}
 
 	public void doAlgorithm() {
-		if (tabbedPane.getTabCount() != 0)
+
+		if (tabbedPane.getTabCount() != 0) {
 			notifyDaddy(tabbedPane.getSelectedIndex());
+		}
 
 	}
 
@@ -196,6 +199,7 @@ public class ContentPane extends JPanel {
 	}
 
 	public void saveModel() {
+
 		if (tabbedPane.getTabCount() != 0) {
 			final Iterator<Daddy> iterator = daddies.iterator();
 			while (iterator.hasNext()) {
@@ -205,12 +209,15 @@ public class ContentPane extends JPanel {
 	}
 
 	public void setEditMode(final int mode) {
-		if (tabbedPane.getTabCount() != 0)
+
+		if (tabbedPane.getTabCount() != 0) {
 			tabbedPane.setEditMode(mode);
+		}
 
 	}
 
 	public void showInf() {
+
 		if (tabbedPane.getTabCount() != 0) {
 			final Iterator<Daddy> iterator = daddies.iterator();
 			while (iterator.hasNext()) {

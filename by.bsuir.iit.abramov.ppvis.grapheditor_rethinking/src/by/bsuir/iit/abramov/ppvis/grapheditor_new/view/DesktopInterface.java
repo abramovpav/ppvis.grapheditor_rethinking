@@ -68,6 +68,7 @@ public interface DesktopInterface {
 	public void setState(Graph graph);
 
 	public void setTempVertexPaintEdge(int x, int y);
+
 	public void showError(String text);
 
 	public void unselectAll();

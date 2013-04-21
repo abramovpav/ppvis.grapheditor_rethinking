@@ -69,7 +69,6 @@ public class Menu extends JMenuBar {
 			});
 		}
 
-		final JMenuItem mnItem;
 		setActionListener("New", new ActionListener() {
 
 			@Override
@@ -80,10 +79,6 @@ public class Menu extends JMenuBar {
 			}
 
 		});
-		/*
-		 * mnItem = mnItems.get("New"); if (mnItem != null) {
-		 * mnItem.addActionListener(); }
-		 */
 
 		setActionListener("Vertex", new InstrumentsActionListener());
 

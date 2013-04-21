@@ -13,6 +13,8 @@ public interface GraphInterface {
 
 	public Vertex addVertex(String ID, Point coordinates);
 
+	public boolean checkID(final String id);
+
 	public void deleteEdge(String beginID, String endID);
 
 	public void deleteEdge(Vertex beginVertex, Vertex endVertex);
@@ -26,13 +28,12 @@ public interface GraphInterface {
 	public void doAlgorithm();
 
 	public List<Edge> getEdges();
-	
-	public void newVertexID(String oldID, String newID);
 
 	public Map<String, Vertex> getVertices();
 
+	public void newVertexID(String oldID, String newID);
+
 	public void newWeight(String firstID, String secondID, int weight);
-	public boolean checkID(final String id);
 
 	public void registerObserver(DesktopObserver observer);
 

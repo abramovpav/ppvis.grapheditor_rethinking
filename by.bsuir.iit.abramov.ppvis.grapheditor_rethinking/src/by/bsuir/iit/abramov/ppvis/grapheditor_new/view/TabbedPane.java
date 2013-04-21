@@ -37,6 +37,7 @@ public class TabbedPane extends JTabbedPane {
 	}
 
 	public void setEditMode(final int mode) {
+
 		final DesktopInterface desktop = ((ExtJScrollPane) getSelectedComponent())
 				.getDesktop();
 		desktop.setEditMode(mode);

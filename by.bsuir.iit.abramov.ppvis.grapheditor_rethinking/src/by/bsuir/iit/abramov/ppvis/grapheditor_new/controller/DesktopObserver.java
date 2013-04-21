@@ -106,19 +106,19 @@ public class DesktopObserver {
 
 	}
 
+	public void showError(final String text) {
+
+		desktop.showError(text);
+	}
+
 	public void vertexNewID(final VertexComponentInterface vertex, final String newID) {
-		
+
 		if (!graph.checkID(newID)) {
-			 	graph.vertexNewID(vertex.getID(), newID);
-			 	vertex.setID(newID);
-			}
-		else {
+			graph.vertexNewID(vertex.getID(), newID);
+			vertex.setID(newID);
+		} else {
 			showError(newID + " already exist");
 		}
-	}
-	
-	public void showError(final String text) {
-		desktop.showError(text);
 	}
 
 }

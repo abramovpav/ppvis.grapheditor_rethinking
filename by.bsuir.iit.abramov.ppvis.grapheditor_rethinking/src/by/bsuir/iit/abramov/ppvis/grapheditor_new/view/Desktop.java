@@ -207,17 +207,12 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 			return -1;
 		}
 	}
-	
+
 	/*
-	 * oldVersion
-	 * if (Character.isDigit(text.charAt(i))) {
-				s += Character.getNumericValue(text.charAt(i)) * d;
-				d *= 10;
-				k++;
-			} else {
-				return -1;
-			}
-	*/
+	 * oldVersion if (Character.isDigit(text.charAt(i))) { s +=
+	 * Character.getNumericValue(text.charAt(i)) * d; d *= 10; k++; } else {
+	 * return -1; }
+	 */
 
 	private boolean isOneSelectedEdge() {
 
@@ -551,6 +546,15 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 	}
 
 	@Override
+	public void showError(final String text) {
+
+		final ErrorScreen error = new ErrorScreen("***ERROR*** " + text);
+		error.setModal(true);
+		error.setVisible(true);
+
+	}
+
+	@Override
 	public void unselectAll() {
 
 		System.out.println("Desktop(" + getID() + ") - unselectAll()");
@@ -585,15 +589,6 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 			selectedVertices.remove(vertex);
 		}
 
-	}
-
-	@Override
-	public void showError(String text) {
-
-		final ErrorScreen error = new ErrorScreen("***ERROR*** " + text);
-		error.setModal(true);
-		error.setVisible(true);
-		
 	}
 
 }
