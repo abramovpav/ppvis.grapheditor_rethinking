@@ -1,5 +1,6 @@
 package by.bsuir.iit.abramov.ppvis.grapheditor_new.view;
 
+import java.awt.Color;
 import java.awt.Point;
 
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.VertexObserver;
@@ -57,6 +58,10 @@ public interface VertexComponentInterface {
 
 	public void select();
 
+	public void select(Color color);
+
+	public void selectEdge(String secondID);
+
 	public void selectRed();
 
 	public void setID(String ID);
@@ -72,6 +77,8 @@ public interface VertexComponentInterface {
 	public void unselect();
 
 	public void unselectAll();
+
+	public void unselectEdge(String secondID);
 
 	public void unselectSpecial();
 

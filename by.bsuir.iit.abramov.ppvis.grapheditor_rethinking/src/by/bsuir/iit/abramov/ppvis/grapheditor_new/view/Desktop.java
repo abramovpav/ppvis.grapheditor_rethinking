@@ -21,6 +21,7 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 	public static final int					EDGE_LAYER			= 50;
 	public static final int					VERTEX_MODE			= 0;
 	public static final int					EDGE_MODE			= 1;
+	public static final int					NULL_MODE			= 2;
 	public static final int					TOP_LAYER			= 0;
 	private int								editMode			= 0;
 	private final int						ID;
@@ -32,10 +33,12 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 	private final JPanel					parent;
 	private EdgeComponentInterface			currentPaintEdge	= null;
 	private boolean							saved				= false;
+	private final ContentPane				contentPane;
 
-	public Desktop(final int ID, final JPanel parent) {
+	public Desktop(final ContentPane contentPane, final int ID, final JPanel parent) {
 
 		super();
+		this.contentPane = contentPane;
 		this.ID = ID;
 		System.out.println("Desktop(" + getID() + ")");
 		this.parent = parent;
@@ -72,6 +75,14 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 		add((VertexComponent) vertex);
 		setLayer((VertexComponent) vertex, Desktop.NODE_LAYER);
 		return vertex;
+	}
+
+	@Override
+	public void blockInterface() {
+
+		setEditMode(Desktop.NULL_MODE);
+		contentPane.blockInterface();
+
 	}
 
 	@Override
@@ -188,6 +199,12 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 		selectedEdges = new ArrayList<EdgeComponentInterface>();
 	}
 
+	/*
+	 * oldVersion if (Character.isDigit(text.charAt(i))) { s +=
+	 * Character.getNumericValue(text.charAt(i)) * d; d *= 10; k++; } else {
+	 * return -1; }
+	 */
+
 	private int isDigit(final String text) {
 
 		int k = 0, s = 0;
@@ -207,12 +224,6 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 			return -1;
 		}
 	}
-
-	/*
-	 * oldVersion if (Character.isDigit(text.charAt(i))) { s +=
-	 * Character.getNumericValue(text.charAt(i)) * d; d *= 10; k++; } else {
-	 * return -1; }
-	 */
 
 	private boolean isOneSelectedEdge() {
 
@@ -484,6 +495,14 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 	}
 
 	@Override
+	public void selectEdge(final String firstID, final String secondID) {
+
+		final VertexComponentInterface vertex = findVertexByID(firstID);
+		vertex.selectEdge(secondID);
+
+	}
+
+	@Override
 	public void setEditMode(final int editMode) {
 
 		System.out.println("Desktop(" + getID() + ") - setEditMode(" + editMode + ")");
@@ -555,6 +574,14 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 	}
 
 	@Override
+	public void unlockInterface() {
+
+		setEditMode(Desktop.NULL_MODE);
+		contentPane.unlockInterface();
+
+	}
+
+	@Override
 	public void unselectAll() {
 
 		System.out.println("Desktop(" + getID() + ") - unselectAll()");
@@ -582,6 +609,14 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 	}
 
 	@Override
+	public void unselectEdge(final String firstID, final String secondID) {
+
+		final VertexComponentInterface vertex = findVertexByID(firstID);
+		vertex.unselectEdge(secondID);
+
+	}
+
+	@Override
 	public void unselectVertex(final VertexComponentInterface vertex) {
 
 		System.out.println("Desktop(" + getID() + ") - unselectVertex()");
@@ -590,5 +625,4 @@ public class Desktop extends JLayeredPane implements DesktopInterface {
 		}
 
 	}
-
 }

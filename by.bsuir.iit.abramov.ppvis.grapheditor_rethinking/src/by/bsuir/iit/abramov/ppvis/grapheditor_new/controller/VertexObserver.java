@@ -1,5 +1,7 @@
 package by.bsuir.iit.abramov.ppvis.grapheditor_new.controller;
 
+import java.awt.Color;
+
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.model.Vertex;
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.view.VertexComponentInterface;
 
@@ -25,6 +27,11 @@ public class VertexObserver {
 
 	}
 
+	public void select(final Color color) {
+
+		vertexComponent.select(color);
+	}
+
 	public void setVertex(final Vertex vertex) {
 
 		this.vertex = vertex;
@@ -35,6 +42,11 @@ public class VertexObserver {
 
 		this.vertexComponent = vertexComponent;
 
+	}
+
+	public void unselect() {
+
+		vertexComponent.unselect();
 	}
 
 	public void update(final String ID) {

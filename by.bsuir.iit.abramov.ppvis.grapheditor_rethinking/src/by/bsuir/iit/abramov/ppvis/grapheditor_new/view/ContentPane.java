@@ -25,10 +25,12 @@ public class ContentPane extends JPanel {
 	private List<Daddy>			daddies;
 	private ToolPanel			toolPanel;
 	private TabbedPane			tabbedPane;
+	private final Window		parent;
 
-	public ContentPane() {
+	public ContentPane(final Window parent) {
 
 		super();
+		this.parent = parent;
 		System.out.println("ContentPane()");
 		initialize();
 	}
@@ -45,6 +47,14 @@ public class ContentPane extends JPanel {
 		if (component != null) {
 			tabbedPane.addTab(title, null, component, null);
 		}
+	}
+
+	public void blockInterface() {
+
+		if (toolPanel != null) {
+			toolPanel.blockInterface();
+		}
+		parent.lockMenu();
 	}
 
 	public void changeTitle(final String title) {
@@ -224,6 +234,14 @@ public class ContentPane extends JPanel {
 				iterator.next().showInf();
 			}
 		}
+	}
+
+	public void unlockInterface() {
+
+		if (toolPanel != null) {
+			toolPanel.unlockInterface();
+		}
+		parent.unlockMenu();
 	}
 
 	public void unselectAll() {

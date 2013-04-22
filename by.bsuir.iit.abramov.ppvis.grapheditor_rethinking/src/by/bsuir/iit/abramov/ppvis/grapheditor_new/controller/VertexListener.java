@@ -32,9 +32,11 @@ public class VertexListener implements MouseListener, MouseMotionListener {
 					.getSource();
 			switch (vertex.getEditMode()) {
 				case Desktop.VERTEX_MODE:
+					System.out.println("vertex");
 					vertexMode.mouseClicked(e);
 				break;
 				case Desktop.EDGE_MODE:
+					System.out.println("edge");
 					edgeMode.mouseClicked(e);
 				break;
 			}

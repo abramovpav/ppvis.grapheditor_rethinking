@@ -11,14 +11,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class SaveDialog extends JDialog {
-	public static final String	TITLE			= "Saving state";
-	public static final int		defaultX		= 500;
-	public static final int		defaultY		= 400;
-	public static final int		defaultWidth	= 300;
-	public static final int		defaultHeight	= 100;
-	private JPanel				contentPane		= null;
-	private DesktopInterface	desktop			= null;
-	private int					status			= -1;
+	public static final String		TITLE			= "Saving state";
+	public static final int			defaultX		= 500;
+	public static final int			defaultY		= 400;
+	public static final int			defaultWidth	= 300;
+	public static final int			defaultHeight	= 100;
+	private final JPanel			contentPane;
+	private final DesktopInterface	desktop;
+	private int						status			= -1;
 
 	public SaveDialog(final DesktopInterface desktop) {
 
@@ -43,6 +43,7 @@ public class SaveDialog extends JDialog {
 		contentPane.add(panel, BorderLayout.SOUTH);
 		panel.add(button);
 		final SaveDialog obj = this;
+		// IZh: extract to separate class with single argument=status.
 		button.addActionListener(new ActionListener() {
 
 			@Override

@@ -33,21 +33,20 @@ public class VertexComponent extends JComponent implements VertexComponentInterf
 		VertexComponent.halfSize = size / 2;
 	}
 
-	private final String						key				= "vertex";
-	private Color								color			= Color.BLACK;
-	public static final Color					RED				= Color.RED;
-	public static final Color					DEFAULT_COLOR	= Color.BLACK;
-	public static final Color					SELECT_COLOR	= Color.GREEN;
-	public static final Color					ACTIVE_COLOR	= Color.ORANGE;
-	public static final Color					WHITE			= Color.WHITE;
-	public static final Color					TEXT_COLOR		= Color.BLUE;
-	private int									mouseX			= 0;
-	private int									mouseY			= 0;
-	private Boolean								selected		= false;
-	private final List<VertexObserver>			observers;
-	private final DesktopInterface				desktop;
-	private final List<EdgeComponentInterface>	lines;
-	private String								ID;
+	private final String				key				= "vertex";
+	private Color						color			= Color.BLACK;
+	public static final Color			RED				= Color.RED;
+	public static final Color			DEFAULT_COLOR	= Color.BLACK;
+	public static final Color			SELECT_COLOR	= Color.GREEN;
+	public static final Color			ACTIVE_COLOR	= Color.ORANGE;
+	public static final Color			WHITE			= Color.WHITE;
+	public static final Color			TEXT_COLOR		= Color.BLUE;
+	private int							mouseX			= 0;
+	private int							mouseY			= 0;
+	private Boolean						selected		= false;
+	private final List<VertexObserver>	observers;
+	private final DesktopInterface		desktop;
+	private String						ID;
 
 	public VertexComponent(final String ID, final int x, final int y,
 			final DesktopInterface desktop) {
@@ -58,7 +57,6 @@ public class VertexComponent extends JComponent implements VertexComponentInterf
 				VertexComponent.size * 3, VertexComponent.size + 3);
 		this.ID = checkID(ID);
 		this.desktop = desktop;
-		lines = new ArrayList<EdgeComponentInterface>();
 		observers = new ArrayList<VertexObserver>();
 		edgeObservers = new ArrayList<EdgeComponentInterface>();
 		final VertexListener listener = new VertexListener();
@@ -300,6 +298,33 @@ public class VertexComponent extends JComponent implements VertexComponentInterf
 	}
 
 	@Override
+	public void select(final Color newColor) {
+
+		System.out.println("VertexComponent(" + desktop.getID() + ", " + ID
+				+ ") - select()");
+		selected = true;
+		setColor(newColor);
+		desktop.setComponentZOrder(this, Desktop.TOP_LAYER);
+		desktop.addSelectedVertex(this);
+		repaint();
+	}
+
+	@Override
+	public void selectEdge(final String secondID) {
+
+		System.out.println("Vertex: selectEdge " + secondID);
+		final Iterator<EdgeComponentInterface> iterator = edgeObservers.iterator();
+		while (iterator.hasNext()) {
+			final EdgeComponentInterface edge = iterator.next();
+			System.out.println("1");
+			if (edge.getOtherVertex(this).getID() == secondID) {
+				System.out.println("2");
+				edge.select();
+			}
+		}
+	}
+
+	@Override
 	public void selectRed() {
 
 		System.out.println("VertexComponent(" + desktop.getID() + ", " + ID
@@ -363,6 +388,18 @@ public class VertexComponent extends JComponent implements VertexComponentInterf
 
 		desktop.unselectAll();
 
+	}
+
+	@Override
+	public void unselectEdge(final String secondID) {
+
+		final Iterator<EdgeComponentInterface> iterator = edgeObservers.iterator();
+		while (iterator.hasNext()) {
+			final EdgeComponentInterface edge = iterator.next();
+			if (edge.getOtherVertex(this).getID() == secondID) {
+				edge.unselect();
+			}
+		}
 	}
 
 	private void unselectFoundation() {

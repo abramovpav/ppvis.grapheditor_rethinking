@@ -13,6 +13,8 @@ public interface DesktopInterface {
 
 	public VertexComponentInterface addVertex(String ID, int x, int y);
 
+	public void blockInterface();
+
 	public void cancelPaintEdge();
 
 	public void clean();
@@ -61,6 +63,8 @@ public interface DesktopInterface {
 
 	public void save();
 
+	public void selectEdge(String firstID, String secondID);
+
 	public void setComponentZOrder(Component comp, int index);
 
 	public void setEditMode(final int editMode);
@@ -71,9 +75,13 @@ public interface DesktopInterface {
 
 	public void showError(String text);
 
+	public void unlockInterface();
+
 	public void unselectAll();
 
 	public void unselectEdge(final EdgeComponentInterface edge);
+
+	public void unselectEdge(String firstID, String secondID);
 
 	public void unselectVertex(VertexComponentInterface vertex);
 }

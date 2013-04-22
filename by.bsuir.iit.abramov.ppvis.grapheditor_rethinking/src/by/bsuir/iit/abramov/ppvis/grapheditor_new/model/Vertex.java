@@ -1,8 +1,10 @@
 package by.bsuir.iit.abramov.ppvis.grapheditor_new.model;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.VertexObserver;
@@ -15,7 +17,6 @@ public class Vertex implements Serializable {
 	private transient List<VertexObserver>	observers;
 	private Point							coordinates;
 	private String							ID;
-	private boolean							selected;
 	private final Graph						graph;
 
 	public Vertex(final Graph graph, final String iD, final int x, final int y) {
@@ -56,13 +57,7 @@ public class Vertex implements Serializable {
 
 	private void initialize() {
 
-		selected = false;
 		observers = new ArrayList<VertexObserver>();
-	}
-
-	public boolean isSelected() {
-
-		return selected;
 	}
 
 	public void registerObserver(final VertexObserver observer) {
@@ -76,6 +71,14 @@ public class Vertex implements Serializable {
 
 		observers.remove(observer);
 
+	}
+
+	public void select(final Color color) {
+
+		final Iterator<VertexObserver> iterator = observers.iterator();
+		while (iterator.hasNext()) {
+			iterator.next().select(color);
+		}
 	}
 
 	public void setCoordinates(final int x, final int y) {
@@ -101,9 +104,12 @@ public class Vertex implements Serializable {
 
 	}
 
-	public void setSelection(final boolean selected) {
+	public void unselect() {
 
-		this.selected = selected;
+		final Iterator<VertexObserver> iterator = observers.iterator();
+		while (iterator.hasNext()) {
+			iterator.next().unselect();
+		}
 	}
 
 }

@@ -18,6 +18,7 @@ public class Window extends JFrame implements KeyListener {
 	public static final String	TITLE			= "GraphEditor";
 
 	private final ContentPane	contentPane;
+	private final Menu			menu;
 
 	/**
 	 * Create the frame.
@@ -30,9 +31,9 @@ public class Window extends JFrame implements KeyListener {
 		setBounds(Window.defaultX, Window.defaultY, Window.defaultWidth,
 				Window.defaultHeight);
 		setExtendedState(Frame.MAXIMIZED_BOTH);
-		contentPane = new ContentPane();
+		contentPane = new ContentPane(this);
 		setContentPane(contentPane);
-		final Menu menu = new Menu(this);
+		menu = new Menu(this);
 		setJMenuBar(menu);
 		addKeyListener(this);
 	}
@@ -91,6 +92,11 @@ public class Window extends JFrame implements KeyListener {
 
 	}
 
+	public void lockMenu() {
+
+		menu.lock();
+	}
+
 	private void openDialogNewID() {
 
 		contentPane.openDialogNewID();
@@ -123,6 +129,11 @@ public class Window extends JFrame implements KeyListener {
 	public void showInf() {
 
 		contentPane.showInf();
+	}
+
+	public void unlockMenu() {
+
+		menu.unlock();
 	}
 
 	private void unselectAll() {

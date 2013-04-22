@@ -4,6 +4,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import by.bsuir.iit.abramov.ppvis.grapheditor_new.view.Desktop;
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.view.VertexComponentInterface;
 
 public class VertexListenerVertexMode implements MouseListener, MouseMotionListener {
@@ -11,6 +12,11 @@ public class VertexListenerVertexMode implements MouseListener, MouseMotionListe
 	private boolean isLeftButtonPressed(final MouseEvent e) {
 
 		return e.getButton() == MouseEvent.BUTTON1;
+	}
+
+	private boolean isVertexMode(final VertexComponentInterface vertex) {
+
+		return vertex.getEditMode() == Desktop.VERTEX_MODE;
 	}
 
 	@Override
@@ -55,6 +61,9 @@ public class VertexListenerVertexMode implements MouseListener, MouseMotionListe
 	public void mouseEntered(final MouseEvent e) {
 
 		final VertexComponentInterface vertex = (VertexComponentInterface) e.getSource();
+		if (!isVertexMode(vertex)) {
+			return;
+		}
 		System.out.println("mouseEntered: VertexComponentInterface("
 				+ vertex.getDesktopID() + ", " + vertex.getID() + ")");
 		if (!vertex.isSelected()) {
@@ -66,6 +75,9 @@ public class VertexListenerVertexMode implements MouseListener, MouseMotionListe
 	public void mouseExited(final MouseEvent e) {
 
 		final VertexComponentInterface vertex = (VertexComponentInterface) e.getSource();
+		if (!isVertexMode(vertex)) {
+			return;
+		}
 		System.out.println("mouseExited: VertexComponentInterface("
 				+ vertex.getDesktopID() + ", " + vertex.getID() + ")");
 		if (!vertex.isSelected()) {

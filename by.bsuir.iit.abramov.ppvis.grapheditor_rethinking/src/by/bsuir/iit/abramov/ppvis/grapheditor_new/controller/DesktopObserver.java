@@ -16,6 +16,11 @@ public class DesktopObserver {
 	private GraphInterface		graph;
 	private DesktopInterface	desktop;
 
+	public void blockInterface() {
+
+		desktop.blockInterface();
+	}
+
 	public void deleteEdge(final EdgeComponentInterface edge) {
 
 		lightDeleteEdge(edge);
@@ -94,6 +99,11 @@ public class DesktopObserver {
 				edge.getWeight());
 	}
 
+	public void selectEdge(final String firstID, final String secondID) {
+
+		desktop.selectEdge(firstID, secondID);
+	}
+
 	public void setDesktop(final DesktopInterface desktop) {
 
 		this.desktop = desktop;
@@ -109,6 +119,16 @@ public class DesktopObserver {
 	public void showError(final String text) {
 
 		desktop.showError(text);
+	}
+
+	public void unlockInterface() {
+
+		desktop.unlockInterface();
+	}
+
+	public void unselectEdge(final String firstID, final String secondID) {
+
+		desktop.unselectEdge(firstID, secondID);
 	}
 
 	public void vertexNewID(final VertexComponentInterface vertex, final String newID) {

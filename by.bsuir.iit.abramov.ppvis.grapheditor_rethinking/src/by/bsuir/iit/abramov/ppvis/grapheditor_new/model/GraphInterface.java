@@ -13,6 +13,8 @@ public interface GraphInterface {
 
 	public Vertex addVertex(String ID, Point coordinates);
 
+	public void blockInterface();
+
 	public boolean checkID(final String id);
 
 	public void deleteEdge(String beginID, String endID);
@@ -38,6 +40,12 @@ public interface GraphInterface {
 	public void registerObserver(DesktopObserver observer);
 
 	public void removeObserver(DesktopObserver observer);
+
+	public void selectEdge(String firstID, String secondID);
+
+	public void unlockInterface();
+
+	public void unselectEdge(String firstID, String secondID);
 
 	public void vertexNewID(String oldID, String newID);
 }

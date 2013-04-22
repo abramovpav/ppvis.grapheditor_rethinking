@@ -45,6 +45,13 @@ public class Menu extends JMenuBar {
 		}
 	}
 
+	public void lock() {
+
+		for (final JMenuItem item : mnItems.values()) {
+			item.setEnabled(false);
+		}
+	}
+
 	public void setActionListener(final String name, final ActionListener listener) {
 
 		final JMenuItem mnItem = mnItems.get(name);
@@ -135,5 +142,12 @@ public class Menu extends JMenuBar {
 
 		});
 
+	}
+
+	public void unlock() {
+
+		for (final JMenuItem item : mnItems.values()) {
+			item.setEnabled(true);
+		}
 	}
 }

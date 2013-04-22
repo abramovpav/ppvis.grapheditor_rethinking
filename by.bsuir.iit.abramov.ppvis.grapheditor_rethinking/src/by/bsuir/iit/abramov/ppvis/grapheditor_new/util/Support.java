@@ -15,7 +15,8 @@ public class Support {
 	public static void newTab(final ContentPane contentPane) {
 
 		final JPanel panel = new JPanel();
-		final DesktopInterface desktop = new Desktop(contentPane.getNextTabID(), panel);
+		final DesktopInterface desktop = new Desktop(contentPane,
+				contentPane.getNextTabID(), panel);
 		final ExtJScrollPane scrollPane = new ExtJScrollPane(desktop);
 		contentPane.addTab(scrollPane);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
@@ -30,7 +31,8 @@ public class Support {
 			final String title) {
 
 		final JPanel panel = new JPanel();
-		final DesktopInterface desktop = new Desktop(contentPane.getNextTabID(), panel);
+		final DesktopInterface desktop = new Desktop(contentPane,
+				contentPane.getNextTabID(), panel);
 		final ExtJScrollPane scrollPane = new ExtJScrollPane(desktop);
 		contentPane.addTab(scrollPane, title);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));

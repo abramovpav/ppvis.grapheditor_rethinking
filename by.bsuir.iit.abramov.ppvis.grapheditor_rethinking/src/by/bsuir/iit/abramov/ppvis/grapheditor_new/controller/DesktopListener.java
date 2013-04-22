@@ -4,6 +4,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import by.bsuir.iit.abramov.ppvis.grapheditor_new.view.Desktop;
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.view.DesktopInterface;
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.view.VertexComponent;
 
@@ -28,6 +29,9 @@ public class DesktopListener implements MouseListener, MouseMotionListener {
 	public void mouseClicked(final MouseEvent e) {
 
 		final DesktopInterface desktop = (DesktopInterface) e.getSource();
+		if (desktop.getEditMode() == Desktop.NULL_MODE) {
+			return;
+		}
 		if (isDoubleClick(e)) {
 			if (isLeftButtonPressed(e)) {
 				System.out.println("mouseClicked - doubleClick(leftButton): desktop - "
