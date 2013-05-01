@@ -14,6 +14,8 @@ import by.bsuir.iit.abramov.ppvis.grapheditor_new.controller.InstrumentsActionLi
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.util.ExtJMenuItem;
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.util.MenuContent;
 import by.bsuir.iit.abramov.ppvis.grapheditor_new.util.Support;
+import by.bsuir.iit.abramov.ppvis.grapheditor_new.view.ContentPane;
+import by.bsuir.iit.abramov.ppvis.grapheditor_new.view.Window;
 
 public class Menu extends JMenuBar {
 	private Map<MenuContent, JMenu>	mnButtons;
